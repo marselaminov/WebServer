@@ -10,9 +10,12 @@
 class ServerSocket : public ASocket
 {
 public:
-	ServerSocket(int domain, int type, int protocol, int port, unsigned long addr);
+	ServerSocket(int domain, int type, int protocol, int port, unsigned long addr, int bcklg);
 
 	int connect(int sock, struct sockaddr_in address);
+	int start_listening();
+private:
+	int _backlog;
 };
 
 
