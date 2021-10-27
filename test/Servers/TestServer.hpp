@@ -6,6 +6,7 @@
 #define WEBSERV_TESTSERVER_HPP
 
 #include "Server.hpp"
+#include "../HTTP/HttpRequest.hpp"
 
 class TestServer : public Server{
 public:
@@ -16,6 +17,7 @@ public:
 private:
 	char _buf[3000];
 	int _new_socket;
+	HttpRequest * _request;
 
 	void _acceptor();
 	void _handler();
