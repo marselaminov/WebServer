@@ -15,6 +15,8 @@ ServerSocket::ServerSocket(int domain, int type, int protocol, int port, unsigne
 
 //binding socket
 int ServerSocket::connect(int sock, struct sockaddr_in address) {
+	int opt = 1;
+	setsockopt(sock, SOL_SOCKET, SO_REUSEADDR, &opt, sizeof(opt));
 	return ::bind(sock, (struct sockaddr *)(&address), (socklen_t)sizeof(address));
 }
 

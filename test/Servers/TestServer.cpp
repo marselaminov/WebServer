@@ -21,6 +21,7 @@ void TestServer::_acceptor() {
 
 void TestServer::_handler() {
 	std::cout << _buf << std::endl;
+	_request = new HttpRequest;
 	_request->parse(_buf);
 	std::cout << "=================================" << std::endl;
 }
@@ -28,7 +29,8 @@ void TestServer::_handler() {
 void TestServer::_responder() {
 	std::stringstream response_body;
 	std::stringstream response;
-	response_body << "<title>Test C++ HTTP Server</title>\n"
+	response_body << "<link rel=\"icon\" href=\"data:,\">\n"
+	<< "<title>Test C++ HTTP Server</title>\n"
 	<< "<h1>Test page</h1>\n"
 	<< "<p>This is body of the test page...</p>\n"
 	<< "<h2>Request headers</h2>\n"

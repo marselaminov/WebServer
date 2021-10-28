@@ -8,16 +8,20 @@
 #include <iostream>
 #include <map>
 
+#define CRLF "\r\n"
+#define BODY_SEP "\r\n\r\n"
+
 class HttpRequest {
 public:
 	void parse(char *buf);
 	void parseHead();
+	void parseQueryString();
 private:
 	std::string 						_strBuf;
 	std::string 						_method;
 	std::string 						_path;
 	std::string							_parameters;
-	std::map <std::string, std::string>	_head;
+	std::map<std::string, std::string>	_head;
 };
 
 
