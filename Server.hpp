@@ -6,7 +6,9 @@
 #define WEBSERV_SERVER_HPP
 
 #include <iostream>
+#include <fstream>
 #include <string>
+#include <sstream>
 #include <vector>
 #include <fstream>
 #include <map>

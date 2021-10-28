@@ -1,6 +1,7 @@
 #include <iostream>
+#include "Parser.hpp"
 
 int main() {
-    std::cout << "Hello, World!" << std::endl;
+    Parser parser("../webserv.conf");
     return 0;
 }

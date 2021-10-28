@@ -8,7 +8,16 @@
 #include "Server.hpp"
 
 class Parser {
+public:
+	Parser(const std::string &file);
+	Parser(const Parser &src);
+	Parser &operator=(const Parser &src);
+	virtual ~Parser();
 
+	const std::vector<Server *> &getServers() const;
+
+private:
+	std::vector<Server *>	servers;
 };
 
 
