@@ -16,10 +16,11 @@
 
 typedef struct	s_location {
     std::vector<std::string>	methods;
-    std::vector<std::string>	index;
+    std::string					index;
     std::string					root;
 	std::string					url;
 	std::string					cgi_path;
+	size_t						client_max_body_size;
 	bool						autoIndex;
 }				t_location;
 
@@ -31,7 +32,6 @@ public:
 	virtual ~Server();
 
 	const sockaddr_in &getSockAddr() const;
-
 	void setSockAddr(const sockaddr_in &sockAddr);
 
 	const std::map<std::string, t_location> &getLocation() const;
@@ -39,49 +39,37 @@ public:
 	void setLocation(const std::map<std::string, t_location> &location);
 
 	const std::string &getServerName() const;
-
 	void setServerName(const std::string &serverName);
 
 	const std::string &getHost() const;
-
 	void setHost(const std::string &host);
-
-	const std::string &getRoot() const;
-
-	void setRoot(const std::string &root);
 
 	const std::string &getErrorPage() const;
 
 	void setErrorPage(const std::string &errorPage);
 
 	unsigned int getPort() const;
-
-	void setPort(unsigned int port);
-
-	unsigned int getClientMaxBodySize() const;
-
-	void setClientMaxBodySize(unsigned int clientMaxBodySize);
+	void setPort(const std::string &port);
 
 	int getErrorPageCode() const;
-
 	void setErrorPageCode(int errorPageCode);
 
 	int getSocketFd() const;
-
 	int	createSocket();
 
+	const std::string &getAuthBasicUserFile() const;
+	void setAuthBasicUserFile(const std::string &authBasicUserFile);
 
 private:
 	struct sockaddr_in					sockAddr;
-	std::map<std::string, t_location>	location;
-	std::string							serverName;
-	std::string 						host;
-	std::string 						root;
-	std::string 						errorPage;
-	unsigned int						port;
-	unsigned int						client_max_body_size;
-	int 								errorPageCode;
 	int									socketFd;
+	std::string 						host;
+	unsigned int						port;
+	std::string							serverName;
+	std::string							auth_basic_user_file;
+	std::string 						errorPage;
+	std::map<std::string, t_location>	location;
+	int 								errorPageCode;
 };
 
 
