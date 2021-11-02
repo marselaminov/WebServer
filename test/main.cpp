@@ -1,8 +1,10 @@
 #include <iostream>
 
-#include "Sockets/ServerSocket.hpp"
-#include "Sockets/ClientSocket.hpp"
-#include "Servers/TestServer.hpp"
+//#include "Sockets/ServerSocket.hpp"
+//#include "Sockets/ClientSocket.hpp"
+//#include "Servers/TestServer.hpp"
+
+#include "WebServer.hpp"
 
 # define RED     "\x1b[31m"
 # define GREEN   "\x1b[32m"
@@ -16,7 +18,8 @@
 int main()
 {
 	try {
-		TestServer t;
+		WebServer t;
+		t.start();
 	}
 	catch (std::exception &e) {
 		std::cout << e.what() << std::endl;

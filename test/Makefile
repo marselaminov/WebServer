@@ -6,6 +6,8 @@ SRC			= Servers/Server.cpp \
         	Sockets/ServerSocket.cpp \
         	Sockets/ClientSocket.cpp \
         	HTTP/HttpRequest.cpp \
+        	Server.cpp \
+        	WebServer.cpp \
 				main.cpp
 
 OBJ			=	$(SRC:.cpp=.o)

@@ -2,12 +2,14 @@
 // Created by Maya Queen on 10/27/21.
 //
 
+#include <algorithm>
 #include "HttpRequest.hpp"
 
 void HttpRequest::parse(char *buf) {
 	_strBuf = std::string(buf);
 	parseQueryString();
 	parseHead();
+	std::cout << "parameters: " << _parameters << std::endl;
 }
 
 void HttpRequest::parseQueryString() {
