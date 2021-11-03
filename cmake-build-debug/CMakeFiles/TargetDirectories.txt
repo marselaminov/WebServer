@@ -1,9 +1,0 @@
-<<<<<<< HEAD
-/Users/marselaminov/CLionProjects/WebServer/cmake-build-debug/CMakeFiles/rebuild_cache.dir
-/Users/marselaminov/CLionProjects/WebServer/cmake-build-debug/CMakeFiles/edit_cache.dir
-/Users/marselaminov/CLionProjects/WebServer/cmake-build-debug/CMakeFiles/WebServer.dir
-=======
-/home/lexa/CLionProjects/WebServer/cmake-build-debug/CMakeFiles/rebuild_cache.dir
-/home/lexa/CLionProjects/WebServer/cmake-build-debug/CMakeFiles/edit_cache.dir
-/home/lexa/CLionProjects/WebServer/cmake-build-debug/CMakeFiles/WebServer.dir
->>>>>>> cec4237d7860b91c54eace71078ba2793a7fd37f
