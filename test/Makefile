@@ -8,6 +8,7 @@ SRC			= Servers/Server.cpp \
         	HTTP/HttpRequest.cpp \
         	Server.cpp \
         	WebServer.cpp \
+        	Parser.cpp \
 				main.cpp
 
 OBJ			=	$(SRC:.cpp=.o)

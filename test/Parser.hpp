@@ -16,7 +16,9 @@ public:
 	virtual ~Parser();
 
 	const std::vector<Server *> &getServers() const;
-	static void	handleServerBlock(std::string &file);
+	void	work_with_file(const std::string &file);
+	void	handleServerBlock(std::string &file);
+	void	handleLocation(Server *serv, std::vector<std::string> &lines, size_t *i);
 
 private:
 	std::vector<Server *>	servers;

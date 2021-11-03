@@ -42,7 +42,7 @@ std::string	get_value(std::string &line, std::string key) {
 	return (temp);
 }
 
-void	handleLocation(Server *serv, std::vector<std::string> &lines, size_t *i) {
+void	Parser::handleLocation(Server *serv, std::vector<std::string> &lines, size_t *i) {
 	std::string temp;
 	std::map<std::string, t_location> tmpLoc;
 
@@ -150,29 +150,6 @@ void	handleLocation(Server *serv, std::vector<std::string> &lines, size_t *i) {
 	serv->setLocation(tmpLoc);
 }
 
-void	work_with_file(const std::string &file) {
-	std::ifstream input;
-	input.open(file);
-	if (!input.is_open())
-		throw std::runtime_error("File corrupted");
-	//------------------------------------------
-	std::string	str;
-	std::stringstream stream;
-
-	while (getline(input, str)) {
-		stream << str << std::endl;
-	}
-	if (stream.str().empty()) {
-		throw std::runtime_error("Where is data on file, dude?");
-	}
-	//std::cout << stream.str();
-	if (stream.str().find("server:") != std::string::npos) {
-		std::string all(stream.str());
-		Parser::handleServerBlock(all);
-	}
-	input.close();
-}
-
 void	Parser::handleServerBlock(std::string &file) {
 //	std::cout << file;
 	std::vector<std::string> lines;
@@ -223,6 +200,29 @@ void	Parser::handleServerBlock(std::string &file) {
 	if (j != lines.size())
 		throw std::runtime_error("Some error in here, ours parser is crap");
 	this->servers.push_back(serv);
+}
+
+void	Parser::work_with_file(const std::string &file) {
+	std::ifstream input;
+	input.open(file);
+	if (!input.is_open())
+		throw std::runtime_error("File corrupted");
+	//------------------------------------------
+	std::string	str;
+	std::stringstream stream;
+
+	while (getline(input, str)) {
+		stream << str << std::endl;
+	}
+	if (stream.str().empty()) {
+		throw std::runtime_error("Where is data on file, dude?");
+	}
+	//std::cout << stream.str();
+	if (stream.str().find("server:") != std::string::npos) {
+		std::string all(stream.str());
+		handleServerBlock(all);
+	}
+	input.close();
 }
 
 Parser::Parser(const std::string &file) {
