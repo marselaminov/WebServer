@@ -1,13 +1,25 @@
+<<<<<<< HEAD
 set(CMAKE_HOST_SYSTEM "Darwin-20.6.0")
 set(CMAKE_HOST_SYSTEM_NAME "Darwin")
 set(CMAKE_HOST_SYSTEM_VERSION "20.6.0")
+=======
+set(CMAKE_HOST_SYSTEM "Linux-5.11.0-38-generic")
+set(CMAKE_HOST_SYSTEM_NAME "Linux")
+set(CMAKE_HOST_SYSTEM_VERSION "5.11.0-38-generic")
+>>>>>>> cec4237d7860b91c54eace71078ba2793a7fd37f
 set(CMAKE_HOST_SYSTEM_PROCESSOR "x86_64")
 
 
 
+<<<<<<< HEAD
 set(CMAKE_SYSTEM "Darwin-20.6.0")
 set(CMAKE_SYSTEM_NAME "Darwin")
 set(CMAKE_SYSTEM_VERSION "20.6.0")
+=======
+set(CMAKE_SYSTEM "Linux-5.11.0-38-generic")
+set(CMAKE_SYSTEM_NAME "Linux")
+set(CMAKE_SYSTEM_VERSION "5.11.0-38-generic")
+>>>>>>> cec4237d7860b91c54eace71078ba2793a7fd37f
 set(CMAKE_SYSTEM_PROCESSOR "x86_64")
 
 set(CMAKE_CROSSCOMPILING "FALSE")

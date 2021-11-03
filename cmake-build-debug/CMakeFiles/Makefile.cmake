@@ -7,6 +7,7 @@ set(CMAKE_DEPENDS_GENERATOR "Unix Makefiles")
 # The top level Makefile was generated from the following files:
 set(CMAKE_MAKEFILE_DEPENDS
   "CMakeCache.txt"
+<<<<<<< HEAD
   "/Applications/CLion.app/Contents/bin/cmake/mac/share/cmake-3.19/Modules/CMakeCCompiler.cmake.in"
   "/Applications/CLion.app/Contents/bin/cmake/mac/share/cmake-3.19/Modules/CMakeCCompilerABI.c"
   "/Applications/CLion.app/Contents/bin/cmake/mac/share/cmake-3.19/Modules/CMakeCInformation.cmake"
@@ -96,10 +97,35 @@ set(CMAKE_MAKEFILE_DEPENDS
   "/Applications/CLion.app/Contents/bin/cmake/mac/share/cmake-3.19/Modules/Platform/Darwin.cmake"
   "/Applications/CLion.app/Contents/bin/cmake/mac/share/cmake-3.19/Modules/Platform/UnixPaths.cmake"
   "/Applications/CLion.app/Contents/bin/cmake/mac/share/cmake-3.19/Modules/ProcessorCount.cmake"
+=======
+>>>>>>> cec4237d7860b91c54eace71078ba2793a7fd37f
   "../CMakeLists.txt"
   "CMakeFiles/3.19.2/CMakeCCompiler.cmake"
   "CMakeFiles/3.19.2/CMakeCXXCompiler.cmake"
   "CMakeFiles/3.19.2/CMakeSystem.cmake"
+<<<<<<< HEAD
+=======
+  "/opt/clion-2021.1.3/bin/cmake/linux/share/cmake-3.19/Modules/CMakeCInformation.cmake"
+  "/opt/clion-2021.1.3/bin/cmake/linux/share/cmake-3.19/Modules/CMakeCXXInformation.cmake"
+  "/opt/clion-2021.1.3/bin/cmake/linux/share/cmake-3.19/Modules/CMakeCommonLanguageInclude.cmake"
+  "/opt/clion-2021.1.3/bin/cmake/linux/share/cmake-3.19/Modules/CMakeExtraGeneratorDetermineCompilerMacrosAndIncludeDirs.cmake"
+  "/opt/clion-2021.1.3/bin/cmake/linux/share/cmake-3.19/Modules/CMakeFindCodeBlocks.cmake"
+  "/opt/clion-2021.1.3/bin/cmake/linux/share/cmake-3.19/Modules/CMakeGenericSystem.cmake"
+  "/opt/clion-2021.1.3/bin/cmake/linux/share/cmake-3.19/Modules/CMakeInitializeConfigs.cmake"
+  "/opt/clion-2021.1.3/bin/cmake/linux/share/cmake-3.19/Modules/CMakeLanguageInformation.cmake"
+  "/opt/clion-2021.1.3/bin/cmake/linux/share/cmake-3.19/Modules/CMakeSystemSpecificInformation.cmake"
+  "/opt/clion-2021.1.3/bin/cmake/linux/share/cmake-3.19/Modules/CMakeSystemSpecificInitialize.cmake"
+  "/opt/clion-2021.1.3/bin/cmake/linux/share/cmake-3.19/Modules/Compiler/CMakeCommonCompilerMacros.cmake"
+  "/opt/clion-2021.1.3/bin/cmake/linux/share/cmake-3.19/Modules/Compiler/GNU-C.cmake"
+  "/opt/clion-2021.1.3/bin/cmake/linux/share/cmake-3.19/Modules/Compiler/GNU-CXX.cmake"
+  "/opt/clion-2021.1.3/bin/cmake/linux/share/cmake-3.19/Modules/Compiler/GNU.cmake"
+  "/opt/clion-2021.1.3/bin/cmake/linux/share/cmake-3.19/Modules/Platform/Linux-GNU-C.cmake"
+  "/opt/clion-2021.1.3/bin/cmake/linux/share/cmake-3.19/Modules/Platform/Linux-GNU-CXX.cmake"
+  "/opt/clion-2021.1.3/bin/cmake/linux/share/cmake-3.19/Modules/Platform/Linux-GNU.cmake"
+  "/opt/clion-2021.1.3/bin/cmake/linux/share/cmake-3.19/Modules/Platform/Linux.cmake"
+  "/opt/clion-2021.1.3/bin/cmake/linux/share/cmake-3.19/Modules/Platform/UnixPaths.cmake"
+  "/opt/clion-2021.1.3/bin/cmake/linux/share/cmake-3.19/Modules/ProcessorCount.cmake"
+>>>>>>> cec4237d7860b91c54eace71078ba2793a7fd37f
   )
 
 # The corresponding makefile is:
@@ -110,11 +136,14 @@ set(CMAKE_MAKEFILE_OUTPUTS
 
 # Byproducts of CMake generate step:
 set(CMAKE_MAKEFILE_PRODUCTS
+<<<<<<< HEAD
   "CMakeFiles/3.19.2/CMakeSystem.cmake"
   "CMakeFiles/3.19.2/CMakeCCompiler.cmake"
   "CMakeFiles/3.19.2/CMakeCXXCompiler.cmake"
   "CMakeFiles/3.19.2/CMakeCCompiler.cmake"
   "CMakeFiles/3.19.2/CMakeCXXCompiler.cmake"
+=======
+>>>>>>> cec4237d7860b91c54eace71078ba2793a7fd37f
   "CMakeFiles/CMakeDirectoryInformation.cmake"
   )
 

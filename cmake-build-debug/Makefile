@@ -58,19 +58,33 @@ cmake_force:
 SHELL = /bin/sh
 
 # The CMake executable.
+<<<<<<< HEAD
 CMAKE_COMMAND = /Applications/CLion.app/Contents/bin/cmake/mac/bin/cmake
 
 # The command to remove a file.
 RM = /Applications/CLion.app/Contents/bin/cmake/mac/bin/cmake -E rm -f
+=======
+CMAKE_COMMAND = /opt/clion-2021.1.3/bin/cmake/linux/bin/cmake
+
+# The command to remove a file.
+RM = /opt/clion-2021.1.3/bin/cmake/linux/bin/cmake -E rm -f
+>>>>>>> cec4237d7860b91c54eace71078ba2793a7fd37f
 
 # Escaping for special characters.
 EQUALS = =
 
 # The top-level source directory on which CMake was run.
+<<<<<<< HEAD
 CMAKE_SOURCE_DIR = /Users/marselaminov/CLionProjects/WebServer
 
 # The top-level build directory on which CMake was run.
 CMAKE_BINARY_DIR = /Users/marselaminov/CLionProjects/WebServer/cmake-build-debug
+=======
+CMAKE_SOURCE_DIR = /home/lexa/CLionProjects/WebServer
+
+# The top-level build directory on which CMake was run.
+CMAKE_BINARY_DIR = /home/lexa/CLionProjects/WebServer/cmake-build-debug
+>>>>>>> cec4237d7860b91c54eace71078ba2793a7fd37f
 
 #=============================================================================
 # Targets provided globally by CMake.
@@ -78,7 +92,11 @@ CMAKE_BINARY_DIR = /Users/marselaminov/CLionProjects/WebServer/cmake-build-debug
 # Special rule for the target rebuild_cache
 rebuild_cache:
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "Running CMake to regenerate build system..."
+<<<<<<< HEAD
 	/Applications/CLion.app/Contents/bin/cmake/mac/bin/cmake --regenerate-during-build -S$(CMAKE_SOURCE_DIR) -B$(CMAKE_BINARY_DIR)
+=======
+	/opt/clion-2021.1.3/bin/cmake/linux/bin/cmake --regenerate-during-build -S$(CMAKE_SOURCE_DIR) -B$(CMAKE_BINARY_DIR)
+>>>>>>> cec4237d7860b91c54eace71078ba2793a7fd37f
 .PHONY : rebuild_cache
 
 # Special rule for the target rebuild_cache
@@ -89,7 +107,11 @@ rebuild_cache/fast: rebuild_cache
 # Special rule for the target edit_cache
 edit_cache:
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "No interactive CMake dialog available..."
+<<<<<<< HEAD
 	/Applications/CLion.app/Contents/bin/cmake/mac/bin/cmake -E echo No\ interactive\ CMake\ dialog\ available.
+=======
+	/opt/clion-2021.1.3/bin/cmake/linux/bin/cmake -E echo No\ interactive\ CMake\ dialog\ available.
+>>>>>>> cec4237d7860b91c54eace71078ba2793a7fd37f
 .PHONY : edit_cache
 
 # Special rule for the target edit_cache
@@ -99,9 +121,15 @@ edit_cache/fast: edit_cache
 
 # The main all target
 all: cmake_check_build_system
+<<<<<<< HEAD
 	$(CMAKE_COMMAND) -E cmake_progress_start /Users/marselaminov/CLionProjects/WebServer/cmake-build-debug/CMakeFiles /Users/marselaminov/CLionProjects/WebServer/cmake-build-debug//CMakeFiles/progress.marks
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 all
 	$(CMAKE_COMMAND) -E cmake_progress_start /Users/marselaminov/CLionProjects/WebServer/cmake-build-debug/CMakeFiles 0
+=======
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/lexa/CLionProjects/WebServer/cmake-build-debug/CMakeFiles /home/lexa/CLionProjects/WebServer/cmake-build-debug//CMakeFiles/progress.marks
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 all
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/lexa/CLionProjects/WebServer/cmake-build-debug/CMakeFiles 0
+>>>>>>> cec4237d7860b91c54eace71078ba2793a7fd37f
 .PHONY : all
 
 # The main clean target
