@@ -10,6 +10,7 @@
 #include "Server.hpp"
 #include "HTTP/HttpRequest.hpp"
 #include "HTTP/HttpResponse.hpp"
+#include "Parser.hpp"
 
 class WebServer {
 public:

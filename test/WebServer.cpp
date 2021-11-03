@@ -4,9 +4,17 @@
 
 #include "WebServer.hpp"
 
-
 WebServer::WebServer() {
-	std::cout << "Parse config and get servers" << std::endl;
+	Parser *parser;
+
+	try {
+		parser = new Parser("/home/lexa/CLionProjects/WebServer/test/test.conf");
+	}
+	catch (std::exception &e) {
+		std::cout << "Error: " << e.what() << std::endl;
+	}
+	_server = parser->getServers();
+	std::cout << _server[0]->getHost() << std::endl;
 }
 
 void WebServer::start() {
