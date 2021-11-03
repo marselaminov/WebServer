@@ -12,6 +12,9 @@ TestServer::TestServer() : Server(AF_INET, SOCK_STREAM, 0, 5555, INADDR_ANY, 10)
 void TestServer::_acceptor() {
 	struct sockaddr_in address = get_socket()->get_address();
 	int addrlen = sizeof (address);
+	std::cout << "FD: " << get_socket()->get_sock_fd() << "\n"
+			  << "addrlen: " << addrlen << "\n"
+			  << "addres.port: " << address.sin_port << "\n";
 	_new_socket = accept(get_socket()->get_sock_fd(),
 					(struct sockaddr *)&address, (socklen_t *)&addrlen);
 	if (_new_socket < 0)

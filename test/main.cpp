@@ -1,8 +1,8 @@
 #include <iostream>
 
-//#include "Sockets/ServerSocket.hpp"
-//#include "Sockets/ClientSocket.hpp"
-//#include "Servers/TestServer.hpp"
+#include "Sockets/ServerSocket.hpp"
+#include "Sockets/ClientSocket.hpp"
+#include "Servers/TestServer.hpp"
 
 #include "WebServer.hpp"
 
@@ -20,6 +20,7 @@ int main()
 	try {
 		WebServer t;
 		t.start();
+//		TestServer t;
 	}
 	catch (std::exception &e) {
 		std::cout << e.what() << std::endl;

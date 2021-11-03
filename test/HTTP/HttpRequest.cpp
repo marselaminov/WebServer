@@ -9,7 +9,6 @@ void HttpRequest::parse(char *buf) {
 	_strBuf = std::string(buf);
 	parseQueryString();
 	parseHead();
-	std::cout << "parameters: " << _parameters << std::endl;
 }
 
 void HttpRequest::parseQueryString() {
@@ -23,8 +22,8 @@ void HttpRequest::parseQueryString() {
 }
 
 void HttpRequest::parseHead() {
-	std::cout << "STRINGS: " << std::endl;
-	for (size_t i = _strBuf.find(CRLF, 0); _strBuf.find(BODY_SEP, i + 2) != std::string::npos ; i = _strBuf.find(CRLF, i + 2)) {
+	for (size_t i = _strBuf.find(CRLF, 0); _strBuf.find(BODY_SEP, i + 2) != std::string::npos ; i = _strBuf.find(CRLF, i + 2))
+	{
 		std::string key = std::string(_strBuf, i + 2, _strBuf.find(':', i + 2) - i - 2);
 		std::string value = std::string(_strBuf, _strBuf.find(' ', i + 2) + 1, _strBuf.find(CRLF, i + 2) - i - 4 - key.length());
 		std::transform(key.begin(), key.end(), key.begin(), toupper);

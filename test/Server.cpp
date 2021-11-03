@@ -5,16 +5,17 @@
 #include "Server.hpp"
 
 Server::Server() {
-
+	_host = "127.0.0.1";
+	_port = 5555;
 }
 
 void Server::createSocket() {
-	if ((_socketFd = socket(PF_INET, SOCK_STREAM, 0)) < 0)
+	if ((_socketFd = socket(AF_INET, SOCK_STREAM, 0)) < 0)
 		throw std::runtime_error("fatal error! socket!");
 	bzero(&_sockAddr, sizeof(_sockAddr));
 
 	_sockAddr.sin_family = AF_INET;
-	_sockAddr.sin_addr.s_addr = inet_addr(_host.c_str());
+	_sockAddr.sin_addr.s_addr =  htonl(INADDR_ANY);
 	_sockAddr.sin_port = htons(_port);
 	int yes = 1;
 
@@ -33,13 +34,13 @@ void Server::createSocket() {
 		throw std::runtime_error("Bind error!");
 	}
 
-	if (fcntl(_socketFd, F_SETFL, O_NONBLOCK) < 0) {
-		if (close(_socketFd) < 0){
-			throw std::runtime_error("Close error!");
-		}
-		throw std::runtime_error("Fcntl error!");
-		return ;
-	}
+//	if (fcntl(_socketFd, F_SETFL, O_NONBLOCK) < 0) {
+//		if (close(_socketFd) < 0){
+//			throw std::runtime_error("Close error!");
+//		}
+//		throw std::runtime_error("Fcntl error!");
+//		return ;
+//	}
 	if (listen(_socketFd, BACKLOG) < 0){
 		if (close(_socketFd) < 0){
 			throw std::runtime_error("Close error!");
