@@ -16,6 +16,7 @@ public:
 	virtual ~Parser();
 
 	const std::vector<Server *> &getServers() const;
+	static void	handleServerBlock(std::string &file);
 
 private:
 	std::vector<Server *>	servers;

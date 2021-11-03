@@ -8,7 +8,7 @@ WebServer::WebServer() {
 	Parser *parser;
 
 	try {
-		parser = new Parser("/home/lexa/CLionProjects/WebServer/test/test.conf");
+		parser = new Parser("../test/test.conf");
 	}
 	catch (std::exception &e) {
 		std::cout << "Error: " << e.what() << std::endl;

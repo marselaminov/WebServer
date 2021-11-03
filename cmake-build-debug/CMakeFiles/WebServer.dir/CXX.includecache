@@ -1,0 +1,42 @@
+#IncludeRegexLine: ^[ 	]*[#%][ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+/Users/marselaminov/CLionProjects/WebServer/test/Parser.cpp
+Parser.hpp
+/Users/marselaminov/CLionProjects/WebServer/test/Parser.hpp
+
+/Users/marselaminov/CLionProjects/WebServer/test/Parser.hpp
+Server.hpp
+/Users/marselaminov/CLionProjects/WebServer/test/Server.hpp
+algorithm
+-
+
+/Users/marselaminov/CLionProjects/WebServer/test/Server.hpp
+iostream
+-
+fstream
+-
+string
+-
+sstream
+-
+vector
+-
+fstream
+-
+map
+-
+strings.h
+-
+arpa/inet.h
+-
+unistd.h
+-
+fcntl.h
+-
+

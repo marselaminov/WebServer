@@ -49,7 +49,7 @@ void	handleLocation(Server *serv, std::vector<std::string> &lines, size_t *i) {
 //	std::cout << lines.size();
 	while (*i < lines.size()) {
 		if (lines[*i][0] == '#' || lines[*i].empty() || lines[*i] == "\n")
-			*i++;
+			*i = *i + 1;
 		if (lines[*i].find("location:") != std::string::npos) {
 			temp = get_value(lines[*i], "location:");
 //			std::cout << temp << std::endl;
@@ -150,7 +150,30 @@ void	handleLocation(Server *serv, std::vector<std::string> &lines, size_t *i) {
 	serv->setLocation(tmpLoc);
 }
 
-void	handleServerBlock(std::string &file) {
+void	work_with_file(const std::string &file) {
+	std::ifstream input;
+	input.open(file);
+	if (!input.is_open())
+		throw std::runtime_error("File corrupted");
+	//------------------------------------------
+	std::string	str;
+	std::stringstream stream;
+
+	while (getline(input, str)) {
+		stream << str << std::endl;
+	}
+	if (stream.str().empty()) {
+		throw std::runtime_error("Where is data on file, dude?");
+	}
+	//std::cout << stream.str();
+	if (stream.str().find("server:") != std::string::npos) {
+		std::string all(stream.str());
+		Parser::handleServerBlock(all);
+	}
+	input.close();
+}
+
+void	Parser::handleServerBlock(std::string &file) {
 //	std::cout << file;
 	std::vector<std::string> lines;
 	std::stringstream stream(file);
@@ -199,29 +222,7 @@ void	handleServerBlock(std::string &file) {
 //	std::cout << lines.size() << std::endl;
 	if (j != lines.size())
 		throw std::runtime_error("Some error in here, ours parser is crap");
-}
-
-void	work_with_file(const std::string &file) {
-	std::ifstream input;
-	input.open(file);
-	if (!input.is_open())
-		throw std::runtime_error("File corrupted");
-	//------------------------------------------
-	std::string	str;
-	std::stringstream stream;
-
-	while (getline(input, str)) {
-		stream << str << std::endl;
-	}
-	if (stream.str().empty()) {
-		throw std::runtime_error("Where is data on file, dude?");
-	}
-	//std::cout << stream.str();
-	if (stream.str().find("server:") != std::string::npos) {
-		std::string all(stream.str());
-		handleServerBlock(all);
-	}
-	input.close();
+	this->servers.push_back(serv);
 }
 
 Parser::Parser(const std::string &file) {
