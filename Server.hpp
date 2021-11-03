@@ -18,7 +18,6 @@ typedef struct	s_location {
     std::vector<std::string>	methods;
     std::string					index;
     std::string					root;
-	std::string					url;
 	std::string					cgi_path;
 	size_t						client_max_body_size;
 	bool						autoIndex;

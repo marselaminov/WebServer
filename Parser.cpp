@@ -44,9 +44,12 @@ std::string	get_value(std::string &line, std::string key) {
 
 void	handleLocation(Server *serv, std::vector<std::string> &lines, size_t *i) {
 	std::string temp;
+	std::map<std::string, t_location> tmpLoc;
 
 //	std::cout << lines.size();
 	while (*i < lines.size()) {
+		if (lines[*i][0] == '#' || lines[*i].empty() || lines[*i] == "\n")
+			*i++;
 		if (lines[*i].find("location:") != std::string::npos) {
 			temp = get_value(lines[*i], "location:");
 //			std::cout << temp << std::endl;
@@ -56,16 +59,12 @@ void	handleLocation(Server *serv, std::vector<std::string> &lines, size_t *i) {
 			location.client_max_body_size = 0;
 			while (*i < lines.size() && lines[*i].find("location:") == std::string::npos) {
 				if (lines[*i][0] == '#' || lines[*i].empty() || lines[*i] == "\n") {
-					*i++;
+					*i = *i + 1;
 					continue;
 				}
 				else if (lines[*i].find("root:") != std::string::npos) {
 					std::string root = get_value(lines[*i], "root:");
 					location.root = root;
-				}
-				else if (lines[*i].find("index:") != std::string::npos) {
-					std::string index = get_value(lines[*i], "index:");
-					location.index = index;
 				}
 				else if (lines[*i].find("autoindex:") != std::string::npos) {
 					std::string autoindex = get_value(lines[*i], "autoindex:");
@@ -75,6 +74,10 @@ void	handleLocation(Server *serv, std::vector<std::string> &lines, size_t *i) {
 						location.autoIndex = false;
 					else
 						throw std::runtime_error("Autoindex error in the config file");
+				}
+				else if (lines[*i].find("index:") != std::string::npos) {
+					std::string index = get_value(lines[*i], "index:");
+					location.index = index;
 				}
 				else if (lines[*i].find("cgi_path:") != std::string::npos) {
 					std::string cgi_path = get_value(lines[*i], "cgi_path:");
@@ -135,13 +138,16 @@ void	handleLocation(Server *serv, std::vector<std::string> &lines, size_t *i) {
 					location.methods = tmpVector;
 //					for (size_t h = 0; h < location.methods.size(); ++h)
 //						std::cout << location.methods[h] << std::endl;
-//					for (size_t h = 0; h < tmpVector.size(); ++h)
-//						std::cout << tmpVector[h] << std::endl;
 				}
-				*i++;
+				*i = *i + 1;
 			}
+			tmpLoc.insert(std::make_pair(temp, location));
+//			tmpLoc[temp] = location;
 		}
+		else
+			throw std::runtime_error("Where locations, man?");
 	}
+	serv->setLocation(tmpLoc);
 }
 
 void	handleServerBlock(std::string &file) {
@@ -189,8 +195,10 @@ void	handleServerBlock(std::string &file) {
 			throw std::runtime_error("Error in the config file");
 		j++;
 	}
-//	if (j != lines.size())
-//		throw std::runtime_error("Some error in here, ours parser is crap");
+//	std::cout << j << std::endl;
+//	std::cout << lines.size() << std::endl;
+	if (j != lines.size())
+		throw std::runtime_error("Some error in here, ours parser is crap");
 }
 
 void	work_with_file(const std::string &file) {
@@ -213,9 +221,9 @@ void	work_with_file(const std::string &file) {
 		std::string all(stream.str());
 		handleServerBlock(all);
 	}
+	input.close();
 }
 
 Parser::Parser(const std::string &file) {
 	work_with_file(file);
-
 }
