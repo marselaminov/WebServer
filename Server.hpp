@@ -69,10 +69,8 @@ private:
 	std::map<std::string, t_location>	_location;
 	std::string							_serverName;
 	std::string 						_host;
-	std::string 						_root;
 	std::string 						_errorPage;
 	unsigned int						_port;
-	unsigned int						_client_max_body_size;
 	int 								_errorPageCode;
 	int									_socketFd;
 	std::string							_auth_basic_user_file;

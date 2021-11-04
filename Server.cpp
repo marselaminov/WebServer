@@ -5,8 +5,6 @@
 #include "Server.hpp"
 
 Server::Server() {
-	_host = "127.0.0.1";
-	_port = 5555;
 }
 
 void Server::createSocket() {

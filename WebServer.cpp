@@ -8,17 +8,16 @@ WebServer::WebServer() {
 	Parser *parser;
 
 	try {
-		parser = new Parser("../test/test.conf");
+		parser = new Parser("../test.conf");
 	}
 	catch (std::exception &e) {
 		std::cout << "Error: " << e.what() << std::endl;
 	}
 	_server = parser->getServers();
-	std::cout << _server[0]->getHost() << std::endl;
+	delete parser;
 }
 
 void WebServer::start() {
-	_server.push_back(new Server);
 	try {
 		_server[0]->createSocket();
 	}
