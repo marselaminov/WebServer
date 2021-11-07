@@ -16,6 +16,8 @@ public:
 	void parse(char *buf);
 	void parseHead();
 	void parseQueryString();
+
+	std::string get_path();
 private:
 	std::string 						_strBuf;
 	std::string 						_method;

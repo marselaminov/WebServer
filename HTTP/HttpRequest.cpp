@@ -30,3 +30,7 @@ void HttpRequest::parseHead() {
 		_head.insert(std::pair<std::string, std::string>(key, value));
 	}
 }
+
+std::string HttpRequest::get_path() {
+	return _path;
+}

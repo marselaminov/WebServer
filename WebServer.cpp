@@ -47,6 +47,9 @@ void WebServer::_handler() {
 void WebServer::_responder() {
 	std::stringstream response_body;
 	std::stringstream response;
+	_response = new HttpResponse;
+	_response->generate(*_server[0], *_request);
+
 	response_body << "<link rel=\"icon\" href=\"data:,\">\n"
 				  << "<title>Test C++ HTTP Server</title>\n"
 				  << "<h1>Test page</h1>\n"
@@ -66,12 +69,13 @@ void WebServer::_responder() {
 //	std::string hello = "HTTP/1.1 200 OK\nContent-Type: text/plain\nContent-Length: 13\n\nMarsel chort!";
 	write(_new_socket , response.str().c_str() , response.str().size());
 	close(_new_socket);
+	delete _response;
 }
 
 void WebServer::life_cycle() {
 	while (true)
 	{
-		std::cout << "Waiting..." << std::endl;
+		std::cout << "Waiting on port: " << _server[0]->getPort() << std::endl;
 		_acceptor();
 		_handler();
 		_responder();

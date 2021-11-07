@@ -5,6 +5,8 @@
 #ifndef WEBSERVER_WEBSERVER_HPP
 #define WEBSERVER_WEBSERVER_HPP
 
+class HttpResponse;
+
 #include <iostream>
 #include <vector>
 #include "Server.hpp"
@@ -24,6 +26,7 @@ private:
 	int						_new_socket;
 	char					_buf[3000];
 	HttpRequest				*_request;
+	HttpResponse			*_response;
 
 	void _acceptor();
 	void _handler();
