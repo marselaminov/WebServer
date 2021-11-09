@@ -34,3 +34,7 @@ void HttpRequest::parseHead() {
 std::string HttpRequest::get_path() {
 	return _path;
 }
+
+std::string HttpRequest::get_method() {
+	return _method;
+}

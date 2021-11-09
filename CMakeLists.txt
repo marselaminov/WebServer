@@ -4,8 +4,6 @@ project(WebServer)
 set(CMAKE_CXX_STANDARD 14)
 
 include_directories(HTTP)
-include_directories(Servers)
-include_directories(Sockets)
 
 add_executable(WebServer
         HTTP/HttpRequest.cpp

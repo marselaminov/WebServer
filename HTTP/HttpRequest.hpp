@@ -18,6 +18,7 @@ public:
 	void parseQueryString();
 
 	std::string get_path();
+	std::string get_method();
 private:
 	std::string 						_strBuf;
 	std::string 						_method;

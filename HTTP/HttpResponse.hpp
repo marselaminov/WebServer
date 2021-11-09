@@ -15,10 +15,13 @@ public:
 	~HttpResponse() {};
 	void generate(Server &server, HttpRequest &request);
 private:
-	t_location get_loc(Server &server, HttpRequest &request);
+	std::string get_loc(Server &server, HttpRequest &request);
+	void 		check_method(const std::string& method);
 
-	std::string _body;
-	std::string _head;
+	std::string	_body;
+	std::string	_head;
+	t_location	_location;
+	std::string _loc_name;
 	int			_code;
 };
 

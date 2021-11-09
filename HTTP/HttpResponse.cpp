@@ -5,12 +5,25 @@
 #include "HttpResponse.hpp"
 
 void HttpResponse::generate(Server &server, HttpRequest &request) {
-	t_location my_loc;
-	my_loc = get_loc(server, request);
-
+	std::string index = get_loc(server, request);
+	check_method(request.get_method());
+	std::string merged_Path = _location.root;
+	if (merged_Path[merged_Path.length() - 1] != '/')
+		merged_Path += '/';
+	if (!index.empty())
+		index.erase(0, 1);
+	merged_Path += index;
+	std::cout << "Merged path: " << merged_Path << std::endl;
 }
 
-t_location HttpResponse::get_loc(Server &server, HttpRequest &request) {
+void HttpResponse::check_method(const std::string& method) {
+	for (std::vector<std::string>::iterator it = _location.methods.begin(); it !=_location.methods.end(); ++it)
+		if (method == *it)
+			return;
+	_code = 405;
+}
+
+std::string HttpResponse::get_loc(Server &server, HttpRequest &request) {
 	std::string path = request.get_path();
 	std::string index;
 
@@ -20,10 +33,14 @@ t_location HttpResponse::get_loc(Server &server, HttpRequest &request) {
 	}
 	while (true){
 		for (std::map<std::string, t_location>::const_iterator it = server.getLocation().begin(); it !=  server.getLocation().end(); ++it) {
-			std::cout << "loc: " << it->first << " ====== path: " << path << std::endl;
 			if (it->first == path) {
-				std::cout << "FIND" << std::endl;
-				break;
+				_location = it->second;
+				_loc_name = it->first;
+				return index;
+			}
+			if (path == "/"){
+				_code = 404;
+				return index;
 			}
 		}
 		std::string tmp = std::string(path, path.rfind('/'));
@@ -32,11 +49,5 @@ t_location HttpResponse::get_loc(Server &server, HttpRequest &request) {
 		if (path.size() == 0){
 			path += "/";
 		}
-		std::cout << "path: " << path << std::endl;
-		std::cout << "index: " << index << std::endl;
 	}
-//	std::cout << "path: " << path << std::endl;
-//	std::cout << "index: " << index << std::endl;
-	t_location tmp;
-	return tmp;
 }
