@@ -12,7 +12,8 @@ class WebServer;
 
 class HttpResponse {
 public:
-	~HttpResponse() {};
+	HttpResponse();
+	virtual ~HttpResponse() {};
 	void generate(Server &server, HttpRequest &request);
 private:
 	std::string get_loc(Server &server, HttpRequest &request);

@@ -17,7 +17,7 @@ class HttpResponse;
 class WebServer {
 public:
 	WebServer();
-	~WebServer() {};
+	virtual ~WebServer() {};
 
 	void start();
 	void life_cycle();
