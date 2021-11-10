@@ -20,6 +20,8 @@ public:
 private:
 	std::string get_loc(Server &server, HttpRequest &request);
 	void 		check_method(const std::string& method);
+	void init(Server &server, HttpRequest &request);
+	void check_dir(HttpRequest &request, struct stat *fileInfo, std::string &path);
 
 	std::string	_body;
 	std::string	_head;
@@ -27,6 +29,5 @@ private:
 	std::string _loc_name;
 	int			_code;
 };
-
 
 #endif //WEBSERVER_HTTPRESPONSE_HPP

@@ -6,23 +6,64 @@
 
 void HttpResponse::generate(Server &server, HttpRequest &request) {
 	_code = 200;
-	std::string index = get_loc(server, request);
-	check_method(request.get_method());
+	int error_flag = 0;
 
-	std::string merged_Path = _location.root;
+	try {
+		init(server, request);					//поиск location, обработка ошибок, проверка файла
+	}
+	catch (std::exception &e) {
+		error_flag = 1;
+		std::cout << "Code: " << _code << std::endl;
+	}
+}
+
+void HttpResponse::init(Server &server, HttpRequest &request) {
+	std::string index = get_loc(server, request);	//поиск подходящего location
+	check_method(request.get_method());				//проверка на разрешенные методы
+	if (_code >= 400)
+		throw std::exception();
+
+	std::string merged_Path = _location.root;				//merged_Path - путь по которому будет искаться запрашиваемый файл
 	if (merged_Path[merged_Path.length() - 1] != '/')
 		merged_Path += '/';
 	if (!index.empty())
 		index.erase(0, 1);
 	merged_Path += index;
-	std::cout << "Merged path: " << merged_Path << std::endl;
-	struct stat fileInfo;
-	if (_code < 400){
-		if (stat(merged_Path.c_str(), &fileInfo) == -1)
-			_code = 404;
 
+	struct stat fileInfo;									//информация о файле или диреткории по пути merged_Path
+	if (stat(merged_Path.c_str(), &fileInfo) == -1) {
+		_code = 404;
+		throw std::exception();
 	}
-	std::cout << "Code: " << _code << std::endl;
+
+	if (S_ISDIR(fileInfo.st_mode))						//если merged_Path папка
+		check_dir(request, &fileInfo, merged_Path);
+
+	std::cout << "Merged path: " << merged_Path << std::endl;
+}
+
+void
+HttpResponse::check_dir(HttpRequest &request, struct stat *fileInfo, std::string &path) {
+	if (!_location.autoIndex && _location.index.empty()){
+		if (!_location.autoIndex)
+			_code = 403;
+		else
+			_code = 404;
+		throw std::exception();
+	}
+	if (!_location.autoIndex && !_location.index.empty()){
+		if (path[path.length() - 1] != '/')
+			path += '/';
+		path += _location.index;
+		int fd = open(path.c_str(), O_RDONLY);
+		if (fd < 0){
+			_code = 404;
+			close(fd);
+			throw std::exception();
+		}
+		close(fd);
+		stat(path.c_str(), fileInfo);
+	}
 }
 
 void HttpResponse::check_method(const std::string& method) {
