@@ -5,14 +5,25 @@
 #ifndef WEBSERVER_WEBSERVER_HPP
 #define WEBSERVER_WEBSERVER_HPP
 
-class HttpResponse;
-
 #include <iostream>
+
 #include <vector>
 #include "Server.hpp"
+#include "Client.hpp"
 #include "HTTP/HttpRequest.hpp"
 #include "HTTP/HttpResponse.hpp"
 #include "Parser.hpp"
+# define RED     "\x1b[31m"
+# define GREEN   "\x1b[32m"
+# define YELLOW  "\x1b[33m"
+# define BLUE    "\x1b[34m"
+# define MAGENTA "\x1b[35m"
+# define CYAN    "\x1b[36m"
+# define RESET   "\x1b[0m"
+#define PORT   8888
+
+class HttpResponse;
+class Client;
 
 class WebServer {
 public:
@@ -23,6 +34,7 @@ public:
 	void life_cycle();
 private:
 	std::vector<Server *>	_server;
+	std::vector<Client *>	_client;
 	int						_new_socket;
 	char					_buf[3000];
 	HttpRequest				*_request;

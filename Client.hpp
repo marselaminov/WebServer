@@ -13,6 +13,9 @@
 # define MAGENTA "\x1b[35m"
 # define RESET   "\x1b[0m"
 
+class HttpResponse;
+class HttpRequest;
+
 class Client {
 public:
 	Client(const sockaddr_in &addr, unsigned int port, const std::string &host, int socketFd);

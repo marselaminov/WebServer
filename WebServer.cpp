@@ -29,11 +29,21 @@ void WebServer::start() {
 
 
 void WebServer::_acceptor() {
-	struct sockaddr_in address = _server[0]->get_sockAddr();
-	int addrlen = sizeof (address);
-	_new_socket = accept(_server[0]->get_sockFd(), (struct sockaddr *)&address, (socklen_t *)&addrlen);
+	struct sockaddr_in addrClient;
+	int addrlen = sizeof(addrClient);
+//	fcntl(socket, F_SETFL, O_NONBLOCK);
+	_new_socket = accept(_server[0]->get_sockFd(), (struct sockaddr *)&addrClient, (socklen_t *)&addrlen);
+	fcntl(_new_socket, F_SETFL, O_NONBLOCK);
 	if (_new_socket < 0)
-		throw (std::runtime_error("WebServer: acceptor"));
+		throw (std::runtime_error(RED "WebServer: acceptor error" RESET));
+	Client *client;
+	try {
+		client = new Client(addrClient, _server[0]->getPort(), _server[0]->getHost(), _new_socket);
+	}
+	catch (std::exception &e) {
+		std::cout << "ERROR: " << e.what() << std::endl;
+	}
+	_client.push_back(client);
 	read(_new_socket, _buf, 30000);
 }
 
@@ -41,13 +51,14 @@ void WebServer::_handler() {
 //	std::cout << _buf << std::endl;
 	_request = new HttpRequest;
 	_request->parse(_buf);
-	std::cout << "=================================" << std::endl;
+	std::cout << "================================"
+				 "=" << std::endl;
 }
 
 void WebServer::_responder() {
 	std::stringstream response_body;
 	std::stringstream response;
-	_response = new HttpResponse;
+	_response = new HttpResponse();
 	_response->generate(*_server[0], *_request);
 
 	response_body << "<link rel=\"icon\" href=\"data:,\">\n"

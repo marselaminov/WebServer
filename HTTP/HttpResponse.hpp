@@ -13,9 +13,11 @@ class WebServer;
 #include <sys/stat.h>
 #include <unistd.h>
 
+class HttpRequest;
+
 class HttpResponse {
 public:
-	HttpResponse();
+	HttpResponse() {};
 	virtual ~HttpResponse() {};
 	void generate(Server &server, HttpRequest &request);
 private:

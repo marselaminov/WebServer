@@ -36,7 +36,8 @@ Client::Client(const sockaddr_in &addr, unsigned int port, const std::string &ho
 	socklen_t len = sizeof(sockaddr_in);
 
 	if (!inet_ntop(this->socketFd, &addr, infoClient, len))
-		std::cerr << "Error inet_ntop" << std::endl;
+		throw (std::runtime_error(RED "Error inet_ntop" RESET));
+//		std::cerr << "Error inet_ntop" << std::endl;
 }
 
 char *Client::getInfoClient() const {

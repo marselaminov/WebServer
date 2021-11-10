@@ -8,13 +8,14 @@ Server::Server() {
 }
 
 void Server::createSocket() {
+	struct sockaddr_in	addr;
 	if ((_socketFd = socket(AF_INET, SOCK_STREAM, 0)) < 0)
 		throw std::runtime_error("fatal error! socket!");
-	bzero(&_sockAddr, sizeof(_sockAddr));
+	bzero(&addr, sizeof(addr));
 
-	_sockAddr.sin_family = AF_INET;
-	_sockAddr.sin_addr.s_addr =  htonl(INADDR_ANY);
-	_sockAddr.sin_port = htons(_port);
+	addr.sin_family = AF_INET;
+	addr.sin_addr.s_addr =  htonl(INADDR_ANY);
+	addr.sin_port = htons(_port);
 	int yes = 1;
 
 	if (setsockopt(_socketFd, SOL_SOCKET, SO_REUSEADDR, &yes, sizeof(int)) == -1)
@@ -25,43 +26,31 @@ void Server::createSocket() {
 		throw std::runtime_error("Setsockopt error!");
 	}
 
-	if ((bind(_socketFd, (struct sockaddr * )&_sockAddr, sizeof _sockAddr)) < 0){
+	if ((bind(_socketFd, (struct sockaddr * )&addr, sizeof addr)) < 0){
 		if (close(_socketFd) < 0) {
 			throw std::runtime_error("Close error!");
 		}
 		throw std::runtime_error("Bind error!");
 	}
 
+//	int flags = fcntl(_socketFd, F_GETFL);
 //	if (fcntl(_socketFd, F_SETFL, O_NONBLOCK) < 0) {
 //		if (close(_socketFd) < 0){
 //			throw std::runtime_error("Close error!");
 //		}
 //		throw std::runtime_error("Fcntl error!");
-//		return ;
 //	}
+
 	if (listen(_socketFd, BACKLOG) < 0){
 		if (close(_socketFd) < 0){
 			throw std::runtime_error("Close error!");
 		}
 		throw std::runtime_error("Listen error!");
 	}
-	return ;
-}
-
-sockaddr_in Server::get_sockAddr() {
-	return _sockAddr;
 }
 
 int Server::get_sockFd() {
 	return _socketFd;
-}
-
-const sockaddr_in &Server::getSockAddr() const {
-	return _sockAddr;
-}
-
-void Server::setSockAddr(const sockaddr_in &sockAddr) {
-	_sockAddr = sockAddr;
 }
 
 const std::map<std::string, t_location> &Server::getLocation() const {
