@@ -55,7 +55,7 @@ void	Parser::handleLocation(Server *serv, std::vector<std::string> &lines, size_
 //			std::cout << temp << std::endl;
 			*i = *i + 1;
 			t_location location;
-			location.autoIndex = true;
+			location.autoIndex = false;
 			location.client_max_body_size = 0;
 			while (*i < lines.size() && lines[*i].find("location:") == std::string::npos) {
 				if (lines[*i][0] == '#' || lines[*i].empty() || lines[*i] == "\n") {
