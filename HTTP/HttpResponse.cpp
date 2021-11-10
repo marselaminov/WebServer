@@ -5,8 +5,10 @@
 #include "HttpResponse.hpp"
 
 void HttpResponse::generate(Server &server, HttpRequest &request) {
+	_code = 200;
 	std::string index = get_loc(server, request);
 	check_method(request.get_method());
+
 	std::string merged_Path = _location.root;
 	if (merged_Path[merged_Path.length() - 1] != '/')
 		merged_Path += '/';
@@ -14,6 +16,13 @@ void HttpResponse::generate(Server &server, HttpRequest &request) {
 		index.erase(0, 1);
 	merged_Path += index;
 	std::cout << "Merged path: " << merged_Path << std::endl;
+	struct stat fileInfo;
+	if (_code < 400){
+		if (stat(merged_Path.c_str(), &fileInfo) == -1)
+			_code = 404;
+
+	}
+	std::cout << "Code: " << _code << std::endl;
 }
 
 void HttpResponse::check_method(const std::string& method) {

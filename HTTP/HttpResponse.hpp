@@ -9,6 +9,9 @@ class WebServer;
 #include <iostream>
 
 #include "../WebServer.hpp"
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <unistd.h>
 
 class HttpResponse {
 public:
