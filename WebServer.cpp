@@ -30,14 +30,16 @@ void WebServer::start() {
 
 void WebServer::_acceptor() {
 	struct sockaddr_in addrClient; // сюда будет записан адрес другого конца соединение(стороны клиента)
-	socklen_t addrLen = sizeof(sockaddr_in); /* размер адресной структуры (после возврата из accept переменная
+	socklen_t addrLen = sizeof(addrClient); /* размер адресной структуры (после возврата из accept переменная
 	будет содержать количесьво байтб которые вызов записал в структуру выше */
 
 	// принимаем соединение со стороны сервера
+//	std::cout << _server[0]->get_sockFd() << std::endl;
 	_new_socket = accept(_server[0]->get_sockFd(), (struct sockaddr *)&addrClient, &addrLen);
+//	std::cout << _new_socket << std::endl;
 //	std::cout << (int)addrLen << std::endl;
-//	fcntl(_new_socket, F_SETFL, O_NONBLOCK); // делаем соединение неблокирующим
-	if (_new_socket < 0)
+	fcntl(_new_socket, F_SETFL, O_NONBLOCK); // делаем клиентский сокет неблокирующим
+	if (_new_socket == -1)
 		throw (std::runtime_error(RED "WebServer: acceptor error" RESET));
 	Client *client;
 	try {

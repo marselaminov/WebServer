@@ -37,11 +37,9 @@ void Server::createSocket() {
 
 
 	// перевод слушающего сокета в неблокирующий режим
-//	int flags = fcntl(_socketFd, F_GETFL);
-//	if (fcntl(_socketFd, F_SETFL, O_NONBLOCK) < 0) {
-//		if (close(_socketFd) < 0){
+//	if (fcntl(_socketFd, F_SETFL, O_NONBLOCK) == -1) {
+//		if (close(_socketFd) < 0)
 //			throw std::runtime_error("Close error!");
-//		}
 //		throw std::runtime_error("Fcntl error!");
 //	}
 
