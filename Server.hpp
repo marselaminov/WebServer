@@ -18,7 +18,7 @@
 #include <unistd.h>
 #include <fcntl.h>
 
-#define BACKLOG 1024
+#define BACKLOG 200
 
 typedef struct	s_location {
 	std::vector<std::string>	methods;

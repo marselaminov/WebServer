@@ -47,7 +47,7 @@ char *Client::getInfoClient() const {
 Client::~Client() {
 	std::cout << MAGENTA << "End of connection (SocketFD = " << this->socketFd << ")" << RESET << std::endl;
 
-	shutdown(this->socketFd, 1); // блокируем передачу и получение данных для сокета
+	shutdown(this->socketFd, SHUT_WR); // блокируем(прекращаем) передачу данных для сокета, но сам сокет уничтожаем следующим действием
 	close(this->socketFd); // закрываем сокет
 	delete this->request;
 	delete this->response;

@@ -29,11 +29,14 @@ void WebServer::start() {
 
 
 void WebServer::_acceptor() {
-	struct sockaddr_in addrClient;
-	int addrlen = sizeof(addrClient);
-//	fcntl(socket, F_SETFL, O_NONBLOCK);
-	_new_socket = accept(_server[0]->get_sockFd(), (struct sockaddr *)&addrClient, (socklen_t *)&addrlen);
-	fcntl(_new_socket, F_SETFL, O_NONBLOCK);
+	struct sockaddr_in addrClient; // сюда будет записан адрес другого конца соединение(стороны клиента)
+	socklen_t addrLen = sizeof(sockaddr_in); /* размер адресной структуры (после возврата из accept переменная
+	будет содержать количесьво байтб которые вызов записал в структуру выше */
+
+	// принимаем соединение со стороны сервера
+	_new_socket = accept(_server[0]->get_sockFd(), (struct sockaddr *)&addrClient, &addrLen);
+//	std::cout << (int)addrLen << std::endl;
+//	fcntl(_new_socket, F_SETFL, O_NONBLOCK); // делаем соединение неблокирующим
 	if (_new_socket < 0)
 		throw (std::runtime_error(RED "WebServer: acceptor error" RESET));
 	Client *client;

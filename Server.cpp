@@ -8,31 +8,35 @@ Server::Server() {
 }
 
 void Server::createSocket() {
-	struct sockaddr_in	addr;
-	if ((_socketFd = socket(AF_INET, SOCK_STREAM, 0)) < 0)
+	// создание сокета
+	if ((_socketFd = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP)) == -1)
 		throw std::runtime_error("fatal error! socket!");
-	bzero(&addr, sizeof(addr));
 
-	addr.sin_family = AF_INET;
-	addr.sin_addr.s_addr =  htonl(INADDR_ANY);
-	addr.sin_port = htons(_port);
-	int yes = 1;
 
-	if (setsockopt(_socketFd, SOL_SOCKET, SO_REUSEADDR, &yes, sizeof(int)) == -1)
-	{
-		if (close(_socketFd) < 0) {
+	// предотвращаем "залипания" нашего порта
+	int opt = 1;
+	if (setsockopt(_socketFd, SOL_SOCKET, SO_REUSEADDR, &opt, sizeof(opt)) == -1) {
+		if (close(_socketFd) < 0)
 			throw std::runtime_error("Close error!");
-		}
 		throw std::runtime_error("Setsockopt error!");
 	}
 
-	if ((bind(_socketFd, (struct sockaddr * )&addr, sizeof addr)) < 0){
-		if (close(_socketFd) < 0) {
+
+	// снабжаем сокет собственным адресом
+	struct sockaddr_in	addr;
+	bzero(&addr, sizeof(addr)); // зануляем элементы структуры , чтобы инициализировать самостоятельно
+	addr.sin_family = AF_INET;
+	addr.sin_addr.s_addr =  inet_addr(_host.c_str());
+	addr.sin_port = htons(_port);
+	int addrlen = sizeof(addr);
+	if ((bind(_socketFd, (struct sockaddr *)&addr, addrlen)) == -1) {
+		if (close(_socketFd) < 0)
 			throw std::runtime_error("Close error!");
-		}
 		throw std::runtime_error("Bind error!");
 	}
 
+
+	// перевод слушающего сокета в неблокирующий режим
 //	int flags = fcntl(_socketFd, F_GETFL);
 //	if (fcntl(_socketFd, F_SETFL, O_NONBLOCK) < 0) {
 //		if (close(_socketFd) < 0){
@@ -41,10 +45,11 @@ void Server::createSocket() {
 //		throw std::runtime_error("Fcntl error!");
 //	}
 
-	if (listen(_socketFd, BACKLOG) < 0){
-		if (close(_socketFd) < 0){
+
+	// делаем сокет слушающим, на сокете в слушающем состоянии можно только принять или не принять соединение
+	if (listen(_socketFd, BACKLOG) == -1) {
+		if (close(_socketFd) < 0)
 			throw std::runtime_error("Close error!");
-		}
 		throw std::runtime_error("Listen error!");
 	}
 }
