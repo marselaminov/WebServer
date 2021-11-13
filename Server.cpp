@@ -34,6 +34,7 @@ void Server::createSocket() {
 			throw std::runtime_error("Close error!");
 		throw std::runtime_error("Bind error!");
 	}
+	_sockAddr = addr;
 
 
 	// перевод слушающего сокета в неблокирующий режим
@@ -121,4 +122,8 @@ const std::string &Server::getAuthBasicUserFile() const {
 
 void Server::setAuthBasicUserFile(const std::string &authBasicUserFile) {
 	_auth_basic_user_file = authBasicUserFile;
+}
+
+const sockaddr_in &Server::getSockAddr() const {
+	return _sockAddr;
 }

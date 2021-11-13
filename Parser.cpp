@@ -144,8 +144,11 @@ void	Parser::handleLocation(Server *serv, std::vector<std::string> &lines, size_
 			tmpLoc.insert(std::make_pair(temp, location));
 //			tmpLoc[temp] = location;
 		}
-		else
+		else {
+//			std::cout << *i << std::endl;
+//			std::cout << lines.size() << std::endl;
 			throw std::runtime_error("Where locations, man?");
+		}
 	}
 	serv->setLocation(tmpLoc);
 }

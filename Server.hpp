@@ -36,7 +36,6 @@ public:
 
 	void	createSocket();
 
-	sockaddr_in get_sockAddr();
 	int get_sockFd();
 
 	const std::map<std::string, t_location> &getLocation() const;
@@ -61,6 +60,11 @@ public:
 
 	const std::string &getAuthBasicUserFile() const;
 	void setAuthBasicUserFile(const std::string &authBasicUserFile);
+private:
+	struct sockaddr_in					_sockAddr;
+public:
+	const sockaddr_in &getSockAddr() const;
+
 private:
 	std::map<std::string, t_location>	_location;
 	std::string							_serverName;

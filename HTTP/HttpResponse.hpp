@@ -6,6 +6,7 @@
 #define WEBSERVER_HTTPRESPONSE_HPP
 
 class WebServer;
+class HttpRequest;
 #include <iostream>
 
 #include "../WebServer.hpp"

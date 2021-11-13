@@ -29,7 +29,7 @@ void WebServer::start() {
 
 
 void WebServer::_acceptor() {
-	struct sockaddr_in address = _server[0]->get_sockAddr();
+	struct sockaddr_in address = _server[0]->getSockAddr();
 	int addrlen = sizeof (address);
 	_new_socket = accept(_server[0]->get_sockFd(), (struct sockaddr *)&address, (socklen_t *)&addrlen);
 	if (_new_socket < 0)
