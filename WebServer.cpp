@@ -45,31 +45,13 @@ void WebServer::_handler() {
 }
 
 void WebServer::_responder() {
-	std::stringstream response_body;
-	std::stringstream response;
 	_response = new HttpResponse;
 	_response->generate(*_server[0], *_request);
 
-	response_body << "<link rel=\"icon\" href=\"data:,\">\n"
-				  << "<title>Test C++ HTTP Server</title>\n"
-				  << "<h1>Test page</h1>\n"
-				  << "<p>This is body of the test page...</p>\n"
-				  << "<h2>Request headers</h2>\n"
-				  << "<pre>" << _buf << "</pre>\n"
-				  << "<em><small>Test C++ Http Server</small></em>\n";
-
-	// Формируем весь ответ вместе с заголовками
-	response << "HTTP/1.1 200 OK\r\n"
-			 << "Version: HTTP/1.1\r\n"
-			 << "Content-Type: text/html; charset=utf-8\r\n"
-			 << "Content-Length: " << response_body.str().length()
-			 << "\r\n\r\n"
-			 << response_body.str();
-
-//	std::string hello = "HTTP/1.1 200 OK\nContent-Type: text/plain\nContent-Length: 13\n\nMarsel chort!";
-	write(_new_socket , response.str().c_str() , response.str().size());
+	write(_new_socket , _response->getResponse().c_str() , _response->getResponse().size());
 	close(_new_socket);
 	delete _response;
+	delete _request;
 }
 
 void WebServer::life_cycle() {
