@@ -4,6 +4,10 @@
 
 #include "HttpResponse.hpp"
 
+HttpResponse::HttpResponse() {
+	setStatusMessages();
+}
+
 void HttpResponse::generate(Server &server, HttpRequest &request) {
 	_code = 200;
 	int error_flag = 0;
@@ -29,10 +33,30 @@ void HttpResponse::generate(Server &server, HttpRequest &request) {
 			std::cerr << "ERROR: " << _code << std::endl;
 		}
 	}
-	if (error_flag){
+	if (error_flag)
 		error_body(server);
-	}
-	std::cout << "BODY:\n" << _body << std::endl;
+	create_header();
+	_to_send = _head + _body;
+	std::cout << "RESPONSE:\n" << _to_send << std::endl;
+}
+
+void HttpResponse::create_header() {
+	std::stringstream header;
+
+//	std::time_t end_time = std::chrono::system_clock::to_time_t(std::chrono::system_clock::now());
+//	std::cout << "TIME: " << std::ctime(&end_time);
+
+	std::string date;
+	time_t rawtime;
+	time(&rawtime);
+	date = ctime(&rawtime);
+	date.erase(date.size() - 1);
+
+	header  << "HTTP/1.1 " << _code << " " << getStatusMessages(_code) << CRLF
+			<< "Date: " << date << CRLF
+			<< "Server: " << "KiRoTa/0.1" << CRLF
+			<< "Content-Length: " << _body.size() << BODY_SEP;
+	_head = header.str();
 }
 
 void HttpResponse::error_body(Server &server) {
@@ -42,7 +66,7 @@ void HttpResponse::error_body(Server &server) {
 		if (!_body.empty())
 			_body.clear();
 		int fd = open(server.getErrorPage().c_str(), O_RDONLY);
-		if (fd < 0){
+		if (fd < 0) {
 			_code = 404;
 			flag = 1;
 			close(fd);
@@ -65,10 +89,10 @@ void HttpResponse::standart_error_body() {
 			 "<html>\n"
 			 "<head>\n"
 			 "<meta http-equiv=\"Content-Type\" content=\"text/html; charset=utf-8\">\n"
-			 "<title>Пример веб-страницы</title>\n"
+			 "<title>Error " << _code << "</title>\n"
 			 "</head>\n"
 			 "<body>\n"
-			 "<h1>" << _status_messages[_code] << "</h1>\n" <<
+			 "<h2>" << _status_messages[_code].c_str() << "</h2>\n" <<
 		  "_____________________" << "<h2>" << _code << "</h2>\n"
 		  "</body>\n"
 		  "</html>";
@@ -77,14 +101,17 @@ void HttpResponse::standart_error_body() {
 
 void HttpResponse::GET_request() {
 	if (S_ISLNK(_fileInfo.st_mode) || S_ISREG(_fileInfo.st_mode)){
-		std::cout << "PATH: " << _merged_path << std::endl;
 		std::ifstream file;
 		file.open(_merged_path);
 		std::getline(file, _body, '\0');
-		if (_location.client_max_body_size > _body.size()){
+		if (_location.client_max_body_size < _body.size() && _location.client_max_body_size > 0){
 			_code = 413;
 			throw std::exception();
 		}
+	}
+	else if (S_ISDIR(_fileInfo.st_mode))
+	{
+//		get_autoindex();
 	}
 	else{
 		_code = 404;
@@ -171,6 +198,14 @@ std::string HttpResponse::get_loc(Server &server, HttpRequest &request) {
 			path += "/";
 		}
 	}
+}
+
+std::string HttpResponse::getResponse() {
+	return _to_send;
+}
+
+std::string HttpResponse::getStatusMessages(int &code) {
+	return _status_messages[code];
 }
 
 void HttpResponse::setStatusMessages() {

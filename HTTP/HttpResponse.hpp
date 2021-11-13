@@ -13,13 +13,12 @@ class WebServer;
 #include <sys/stat.h>
 #include <unistd.h>
 
-class HttpRequest;
-
 class HttpResponse {
 public:
-	HttpResponse() {};
-	virtual ~HttpResponse() {};
+	~HttpResponse() {};
+	HttpResponse();
 	void generate(Server &server, HttpRequest &request);
+	std::string getResponse();
 private:
 	std::string get_loc(Server &server, HttpRequest &request);
 	void 		check_method(const std::string& method);
@@ -29,7 +28,11 @@ private:
 	void error_body(Server &server);
 	void standart_error_body();
 	void setStatusMessages();
+	std::string getStatusMessages(int &code);
+	void create_header();
+	void create_to_send();
 
+	std::string _to_send;
 	std::string	_body;
 	std::string	_head;
 	t_location	_location;
