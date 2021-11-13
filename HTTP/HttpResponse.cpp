@@ -111,7 +111,7 @@ void HttpResponse::GET_request() {
 	}
 	else if (S_ISDIR(_fileInfo.st_mode))
 	{
-//		get_autoindex();
+		_body = get_autoindex(_merged_path, _location.root);
 	}
 	else{
 		_code = 404;

@@ -16,4 +16,4 @@ add_executable(WebServer
         Server.cpp
         Server.hpp
         Parser.hpp
-        Parser.cpp)
+        Parser.cpp HTTP/AutoIndex.cpp)
