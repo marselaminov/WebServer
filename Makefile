@@ -1,4 +1,4 @@
-NAME 		=	test
+NAME 		=	webserv
 
 SRC			= Server.cpp \
         	HTTP/HttpRequest.cpp \

@@ -107,7 +107,7 @@ void	get_body(std::stringstream &response, std::vector<t_content> &dir_content) 
 		if (dir_content[i].name[0] == '.' && dir_content[i].name != "..")
 			continue;
 //		<a href="URL">текст ссылки</a>
-		response << "<img src=\"../folder1.jpeg\" width=\"20\" height=\"20\">";
+		response << "<img src=\"folder1.jpeg\" width=\"20\" height=\"20\">";
 		response << 	"<a href=\"";
 		response << dir_content[i].name;
 		response << "\">";
