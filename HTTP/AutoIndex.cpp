@@ -34,8 +34,6 @@ t_content genarate_struct(std::string &path, const std::string& name, std::strin
 		std::cerr << "ERROR: Autoindex.cpp: generate_struct" << std::endl;
 		return cont;
 	}
-//	cont.ref.erase(cont.ref.find(root), root.size());
-	std::cout << cont.ref << std::endl;
 	time_t time = structstat.st_mtimespec.tv_sec;
 	cont.last_mode = ctime(&time);
 
@@ -100,14 +98,17 @@ void	get_title(std::stringstream &response, std::string &path){
 
 void	get_body(std::stringstream &response, std::vector<t_content> &dir_content) {
 	response << "<body>";
-	response << "<img src=\"/Users/mqueen/Projects/WebServer/folder1.jpeg\" width=\"20\" height=\"20\">";
-	response <<		"<listing>";
+	response << "<center>";
+	response <<	"<listing>";
 	for (size_t i = 0; i < dir_content.size(); ++i)
 	{
 		if (dir_content[i].name[0] == '.' && dir_content[i].name != "..")
 			continue;
 //		<a href="URL">текст ссылки</a>
-		response << "<img src=\"folder1.jpeg\" width=\"20\" height=\"20\">";
+		if (dir_content[i].size == 0)
+			response << "<img src=\"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTD0oydsq269jJlxvwuNV1DYJjtUbQ29VqEHA&usqp=CAU\" width=\"20\" height=\"20\">";
+		else
+			response << "<img src=\"https://rubin-spb.ru/wp-content/uploads/2021/02/file.png\" width=\"20\" height=\"20\">";
 		response << 	"<a href=\"";
 		response << dir_content[i].name;
 		response << "\">";
@@ -126,6 +127,7 @@ void	get_body(std::stringstream &response, std::vector<t_content> &dir_content) 
 
 void	get_close(std::stringstream &response){
 	response << "</listing>"
+				"</center>"
 				"</body>"
 		   		"</html>";
 }
