@@ -44,4 +44,6 @@ private:
 	std::map<int, std::string> _status_messages;
 };
 
+std::string get_autoindex(std::string &path, std::string &root);
+
 #endif //WEBSERVER_HTTPRESPONSE_HPP

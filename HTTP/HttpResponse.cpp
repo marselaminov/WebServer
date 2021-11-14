@@ -37,7 +37,7 @@ void HttpResponse::generate(Server &server, HttpRequest &request) {
 		error_body(server);
 	create_header();
 	_to_send = _head + _body;
-	std::cout << "RESPONSE:\n" << _to_send << std::endl;
+//	std::cout << "RESPONSE:\n" << _to_send << std::endl;
 }
 
 void HttpResponse::create_header() {
@@ -111,7 +111,7 @@ void HttpResponse::GET_request() {
 	}
 	else if (S_ISDIR(_fileInfo.st_mode))
 	{
-//		get_autoindex();
+		_body = get_autoindex(_merged_path, _location.root);
 	}
 	else{
 		_code = 404;
@@ -142,6 +142,7 @@ void HttpResponse::init(Server &server, HttpRequest &request) {
 }
 
 void HttpResponse::check_dir(HttpRequest &request) {
+	(void ) request;
 	if (!_location.autoIndex && _location.index.empty()){
 		if (!_location.autoIndex)
 			_code = 403;

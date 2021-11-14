@@ -65,16 +65,8 @@ void Server::setLocation(const std::map<std::string, t_location> &location) {
 	_location = location;
 }
 
-const std::string &Server::getServerName() const {
-	return _serverName;
-}
-
 void Server::setServerName(const std::string &serverName) {
 	_serverName = serverName;
-}
-
-const std::string &Server::getHost() const {
-	return _host;
 }
 
 void Server::setHost(const std::string &host) {
@@ -110,14 +102,6 @@ void Server::setPort(const std::string &port) {
 
 int Server::getErrorPageCode() const {
 	return _errorPageCode;
-}
-
-void Server::setErrorPageCode(int errorPageCode) {
-	_errorPageCode = errorPageCode;
-}
-
-const std::string &Server::getAuthBasicUserFile() const {
-	return _auth_basic_user_file;
 }
 
 void Server::setAuthBasicUserFile(const std::string &authBasicUserFile) {
