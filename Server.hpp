@@ -39,17 +39,12 @@ public:
 	sockaddr_in get_sockAddr();
 	int get_sockFd();
 
-	const sockaddr_in &getSockAddr() const;
-	void setSockAddr(const sockaddr_in &sockAddr);
-
 	const std::map<std::string, t_location> &getLocation() const;
 
 	void setLocation(const std::map<std::string, t_location> &location);
 
-	const std::string &getServerName() const;
 	void setServerName(const std::string &serverName);
 
-	const std::string &getHost() const;
 	void setHost(const std::string &host);
 
 	const std::string &getErrorPage() const;
@@ -60,9 +55,7 @@ public:
 	void setPort(const std::string &port);
 
 	int getErrorPageCode() const;
-	void setErrorPageCode(int errorPageCode);
 
-	const std::string &getAuthBasicUserFile() const;
 	void setAuthBasicUserFile(const std::string &authBasicUserFile);
 private:
 	struct sockaddr_in					_sockAddr;

@@ -1,11 +1,9 @@
 NAME 		=	test
 
-SRC			= Servers/Server.cpp \
-			Servers/TestServer.cpp \
-       		Sockets/ASocket.cpp \
-        	Sockets/ServerSocket.cpp \
-        	Sockets/ClientSocket.cpp \
+SRC			= Server.cpp \
         	HTTP/HttpRequest.cpp \
+        	HTTP/HttpResponse.cpp \
+        	HTTP/AutoIndex.cpp \
         	Server.cpp \
         	WebServer.cpp \
         	Parser.cpp \

@@ -34,6 +34,8 @@ t_content genarate_struct(std::string &path, const std::string& name, std::strin
 		std::cerr << "ERROR: Autoindex.cpp: generate_struct" << std::endl;
 		return cont;
 	}
+//	cont.ref.erase(cont.ref.find(root), root.size());
+	std::cout << cont.ref << std::endl;
 	time_t time = structstat.st_mtimespec.tv_sec;
 	cont.last_mode = ctime(&time);
 
@@ -68,26 +70,76 @@ std::string get_dir_content(std::string &path, std::vector<t_content> &dir_conte
 		}
 		closedir(dir);
 	}
+//	for (size_t i = 0; i < dir_content.size(); ++i)
+//	{
+//		ss << dir_content[i].name;
+//		for (int j = 0; j < 20 - dir_content[i].name.size(); ++j) {
+//			ss << " ";
+//		}
+//		ss << "\t" << dir_content[i].size
+//		<< "\t" << dir_content[i].ref;
+//		for (int j = 0; j < 20 - dir_content[i].ref.size(); ++j) {
+//			ss << " ";
+//		}
+//		ss << "\t" << dir_content[i].last_mode;
+//	}
+	return ss.str();
+}
+
+void	get_title(std::stringstream &response, std::string &path){
+//title--------------------------------
+	response << 	"<!DOCTYPE html>"
+				"<html lang=\"en\">"
+				"<head>"
+				"<meta charset=\"UTF-8\">"
+				"<title>"
+				<< path <<
+				"</title>"
+				"</head>";
+}
+
+void	get_body(std::stringstream &response, std::vector<t_content> &dir_content) {
+	response << "<body>";
+	response << "<img src=\"/Users/mqueen/Projects/WebServer/folder1.jpeg\" width=\"20\" height=\"20\">";
+	response <<		"<listing>";
 	for (size_t i = 0; i < dir_content.size(); ++i)
 	{
-		ss << dir_content[i].name;
-		for (int j = 0; j < 20 - dir_content[i].name.size(); ++j) {
-			ss << " ";
+		if (dir_content[i].name[0] == '.' && dir_content[i].name != "..")
+			continue;
+//		<a href="URL">текст ссылки</a>
+		response << "<img src=\"../folder1.jpeg\" width=\"20\" height=\"20\">";
+		response << 	"<a href=\"";
+		response << dir_content[i].name;
+		response << "\">";
+		response << dir_content[i].name << "</a>";
+		for (unsigned long j = 0; j < 20 - dir_content[i].name.size(); ++j) {
+			response << " ";
 		}
-		ss << "\t" << dir_content[i].size
-		<< "\t" << dir_content[i].ref;
-		for (int j = 0; j < 20 - dir_content[i].ref.size(); ++j) {
-			ss << " ";
-		}
-		ss << "\t" << dir_content[i].last_mode;
+		response << "\t" << dir_content[i].size;
+//		   << "\t" << dir_content[i].ref;
+//		for (int j = 0; j < 20 - dir_content[i].ref.size(); ++j) {
+//			response << " ";
+//		}
+		response << "\t" << dir_content[i].last_mode;
 	}
-	return ss.str();
+}
+
+void	get_close(std::stringstream &response){
+	response << "</listing>"
+				"</body>"
+		   		"</html>";
 }
 
 std::string get_autoindex(std::string &path, std::string &root){
 	std::string str;
 	std::vector<t_content> dir_content;
+	std::stringstream response;
+
+	std::cout << path << " " << root << std::endl;
 
 	str = get_dir_content(path, dir_content, root);
-	return str;
+	get_title(response, path);
+	get_body(response, dir_content);
+	get_close(response);
+	return response.str();
 }
