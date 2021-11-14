@@ -11,6 +11,7 @@ add_executable(WebServer
         main.cpp
         HTTP/HttpResponse.cpp
         HTTP/HttpResponse.hpp
+        HTTP/AutoIndex.cpp
         WebServer.cpp
         WebServer.hpp
         Server.cpp

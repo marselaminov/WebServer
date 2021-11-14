@@ -93,12 +93,50 @@ void	get_title(std::stringstream &response, std::string &path){
 				"<title>"
 				<< path <<
 				"</title>"
+				"<style>"
+//				"#q {"
+//				"background:#477ab9;"
+//				"width:100%;"
+//				"-webkit-transition: all 0.4s ease-in-out;"
+//				"-moz-transition: all 0.4s ease-in-out;"
+//				"-ms-transition: all 0.4s ease-in-out;"
+//				"-o-transition: all 0.4s ease-in-out;"
+//				"transition: all 0.4s ease-in-out;"
+//				"}"
+//				"#q:hover { "
+//				"background:#3D689C;"
+//				"}"
+				"canvas {"
+				"position:absolute;"
+				"z-index:-1;"
+				"}"
+				"</style>"
 				"</head>";
 }
 
 void	get_body(std::stringstream &response, std::vector<t_content> &dir_content) {
 	response << "<body>";
+	response << "<canvas id=q></canvas>"
+	"<script>"
+	"const s = window.screen;"
+	"const w = (q.width = s.width);"
+	"const h = (q.height = s.height);"
+	"const ctx = q.getContext(\"2d\");"
+								 "const p = Array(Math.floor(w / 10) + 1).fill(0);"
+	"const random = (items) => items[Math.floor(Math.random() * items.length)];"
+	"const hex = \"0123456789ABCDEF\".split(\"\");"
+	"setInterval(() => {"
+	"	ctx.fillStyle = \"rgba(0,0,0,.05)\";"
+	"	ctx.fillRect(0, 0, w, h);"
+	"	ctx.fillStyle = \"#0f0\";"
+	"	p.map((v, i) => {"
+	"		ctx.fillText(random(hex), i * 10, v);"
+	"		p[i] = v >= h || v > 50 + 10000 * Math.random() ? 0 : v + 10;"
+	"	});"
+	"	}, 1000 / 30);"
+	"</script>";
 	response << "<center>";
+	response << "<div id=\"aaa\">";
 	response <<	"<listing>";
 	for (size_t i = 0; i < dir_content.size(); ++i)
 	{
@@ -127,6 +165,7 @@ void	get_body(std::stringstream &response, std::vector<t_content> &dir_content) 
 
 void	get_close(std::stringstream &response){
 	response << "</listing>"
+				"</div>"
 				"</center>"
 				"</body>"
 		   		"</html>";
