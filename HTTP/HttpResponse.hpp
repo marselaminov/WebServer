@@ -10,6 +10,7 @@ class HttpRequest;
 #include <iostream>
 
 #include "../WebServer.hpp"
+#include "../CGI.hpp"
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <unistd.h>

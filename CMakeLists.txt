@@ -17,4 +17,4 @@ add_executable(WebServer
         Server.cpp
         Server.hpp
         Parser.hpp
-        Parser.cpp CGI.cpp CGI.hpp)
+        Parser.cpp CGI.cpp CGI.hpp ChunkedRequest.cpp ChunkedRequest.hpp)
