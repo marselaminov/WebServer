@@ -176,7 +176,7 @@ std::string get_autoindex(std::string &path, std::string &root){
 	std::vector<t_content> dir_content;
 	std::stringstream response;
 
-	std::cout << path << " " << root << std::endl;
+//	std::cout << path << " " << root << std::endl;
 
 	str = get_dir_content(path, dir_content, root);
 	get_title(response, path);

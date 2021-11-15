@@ -11,5 +11,4 @@ class CGI {
 
 };
 
-
 #endif //WEBSERVER_CGI_HPP
