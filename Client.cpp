@@ -53,3 +53,11 @@ Client::~Client() {
 	delete this->response;
 	delete this->infoClient;
 }
+
+void Client::setRequest(HttpRequest *request) {
+	Client::request = request;
+}
+
+void Client::setResponse(HttpResponse *response) {
+	Client::response = response;
+}

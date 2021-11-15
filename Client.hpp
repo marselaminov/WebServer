@@ -34,6 +34,12 @@ public:
 
 private:
 	HttpRequest			*request;
+public:
+	void setRequest(HttpRequest *request);
+
+	void setResponse(HttpResponse *response);
+
+private:
 	HttpResponse		*response;
 	struct sockaddr_in	addr;
 	unsigned int		port;

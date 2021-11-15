@@ -26,6 +26,7 @@ private:
 	void init(Server &server, HttpRequest &request);
 	void check_dir(HttpRequest &request);
 	void GET_request();
+	void POST_request();
 	void error_body(Server &server);
 	void standart_error_body();
 	void setStatusMessages();
@@ -35,13 +36,14 @@ private:
 
 	std::string _to_send;
 	std::string	_body;
-	std::string	_head;
-	t_location	_location;
+	std::string _head;
+	t_location _location;
 	std::string _loc_name;
-	int			_code;
+	int _code;
 	struct stat _fileInfo;
-	std::string	_merged_path;
+	std::string _merged_path;
 	std::map<int, std::string> _status_messages;
+//	CGI _cgi;
 };
 
 std::string get_autoindex(std::string &path, std::string &root);

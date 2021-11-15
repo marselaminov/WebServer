@@ -21,16 +21,18 @@ void HttpResponse::generate(Server &server, HttpRequest &request) {
 	}
 	if (!error_flag) {
 		try {
-			if (request.get_method() == "GET")
+			if (request.get_method() == "GET") {
 				GET_request();
+//				std::cout << _location.cgi_path << std::endl;
+			}
 			if (request.get_method() == "DELETE")
 			{}
 			if (request.get_method() == "POST")
-			{}
+				POST_request();
 		}
 		catch (std::exception &e) {
 			error_flag = 1;
-			std::cerr << "ERROR: " << _code << std::endl;
+			std::cerr << RED"ERROR: " << _code << RESET << std::endl;
 		}
 	}
 	if (error_flag)
@@ -97,6 +99,25 @@ void HttpResponse::standart_error_body() {
 		  "</body>\n"
 		  "</html>";
 	_body = buf.str();
+}
+
+void HttpResponse::POST_request() { // функция вызывается в блоке try , можно выкидывать исключения (в классе CGI тоже)
+	if (!_location.cgi_path.empty()) {
+		std::cout << BLUE"CGI WORK" RESET << std::endl;
+		std::string tmp = _location.cgi_path;
+		if (tmp.find(".bla", 0, 4) != std::string::npos) {
+			size_t i = tmp.find(".bla", 0, 4);
+			i += 4;
+			while (i < tmp.size()) {
+				if (tmp[i] == ' ' || tmp[i] == '\t')
+					i++;
+			}
+			std::string cgiPath = tmp.substr(i, (tmp.size() - i));
+
+		}
+	}
+	else
+		throw (std::runtime_error(RED"Unable to execute command because there is no CGI path" RESET));
 }
 
 void HttpResponse::GET_request() {
