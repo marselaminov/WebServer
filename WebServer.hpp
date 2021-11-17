@@ -36,13 +36,17 @@ private:
 	std::vector<Server *>	_server;
 	std::vector<Client *>	_client;
 	int						_new_socket;
+	int 					_max_socket_FD;
 	char					_buf[3000];
-	HttpRequest				*_request;
+//	HttpRequest				*_request;
 	HttpResponse			*_response;
 
-	void _acceptor();
-	void _handler();
-	void _responder();
+	int _flag;
+
+	void initSD(fd_set &readFdSet, fd_set &writeFdSet);
+	void _acceptor(fd_set &readFdSet, fd_set &writeFdSet);
+	void _handler(fd_set &readFdSet, fd_set &writeFdSet);
+//	void _responder();
 };
 
 

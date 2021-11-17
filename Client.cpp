@@ -5,11 +5,11 @@
 #include "Client.hpp"
 
 
-HttpRequest *Client::getRequest() const {
+HttpRequest *Client::getRequest() {
 	return request;
 }
 
-HttpResponse *Client::getResponse() const {
+HttpResponse *Client::getResponse() {
 	return response;
 }
 
@@ -25,19 +25,19 @@ int Client::getSocketFd() const {
 	return socketFd;
 }
 
-Client::Client(const sockaddr_in &addr, unsigned int port, const std::string &host, int socketFd) : addr(addr),
-																									port(port),
-																									host(host),
-																									socketFd(
-																											socketFd) {
+Client::Client(const sockaddr_in &addr, unsigned int port, const std::string &host, int socketFd)
+: addr(addr), port(port), host(host), socketFd(socketFd)
+{
+	_flag = _Client___Ready_To_Read;
 	this->request = new HttpRequest();
 	this->response = new HttpResponse();
-	this->infoClient = new char[20];
+	this->infoClient = new char[100];
 	socklen_t len = sizeof(sockaddr_in);
+//	inet_ntop(this->socketFd, &this->addr, this->infoClient, len);
 
-	if (!inet_ntop(this->socketFd, &addr, infoClient, len))
-		throw (std::runtime_error(RED "Error inet_ntop" RESET));
-//		std::cerr << "Error inet_ntop" << std::endl;
+	if (!inet_ntop(AF_INET, &this->addr, this->infoClient, len))
+//		throw (std::runtime_error(RED "Error inet_ntop" RESET));
+		std::cerr << "Error inet_ntop" << std::endl;
 }
 
 char *Client::getInfoClient() const {
@@ -60,4 +60,12 @@ void Client::setRequest(HttpRequest *request) {
 
 void Client::setResponse(HttpResponse *response) {
 	Client::response = response;
+}
+
+int Client::getFlag() const {
+	return _flag;
+}
+
+void Client::setFlag(int flag) {
+	_flag = flag;
 }

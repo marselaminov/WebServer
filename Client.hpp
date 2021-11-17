@@ -13,6 +13,12 @@
 # define MAGENTA "\x1b[35m"
 # define RESET   "\x1b[0m"
 
+#define _Client___Ready_To_Read 1
+#define _Client___Ready_To_Parse 2
+#define _Client___Ready_To_Respond 3
+#define _Client___Ready_To_Send 4
+#define _Client___Ready_To_Close 5
+
 class HttpResponse;
 class HttpRequest;
 
@@ -21,8 +27,8 @@ public:
 	Client(const sockaddr_in &addr, unsigned int port, const std::string &host, int socketFd);
 	virtual ~Client();
 
-	HttpRequest *getRequest() const;
-	HttpResponse *getResponse() const;
+	HttpRequest *getRequest();
+	HttpResponse *getResponse();
 
 	unsigned int getPort() const;
 
@@ -32,6 +38,8 @@ public:
 
 	int getSocketFd() const;
 
+	int getFlag() const;
+	void setFlag(int flag);
 private:
 	HttpRequest			*request;
 public:
@@ -46,6 +54,7 @@ private:
 	std::string			host;
 	char				*infoClient;
 	int					socketFd;
+	int 				_flag;
 };
 
 #endif //WEBSERVER_CLIENT_HPP

@@ -111,3 +111,7 @@ void Server::setAuthBasicUserFile(const std::string &authBasicUserFile) {
 const sockaddr_in &Server::getSockAddr() const {
 	return _sockAddr;
 }
+
+std::string Server::getHost() const {
+	return _host;
+}
