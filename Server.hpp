@@ -64,7 +64,15 @@ public:
 private:
 	std::map<std::string, t_location>	_location;
 	std::string							_serverName;
+public:
+	const std::string &getServerName() const;
+
+private:
 	std::string 						_host;
+public:
+	const std::string &getHost() const;
+
+private:
 	std::string 						_errorPage;
 	unsigned int						_port;
 	int 								_errorPageCode;

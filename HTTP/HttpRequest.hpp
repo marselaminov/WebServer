@@ -26,6 +26,7 @@ public:
 	void parseBody();
 	void handleChunk(size_t startIndex);
 	void parseQueryString();
+	std::string getContentType();
 
 	std::string get_path();
 	std::string get_method();

@@ -77,3 +77,12 @@ const std::map<std::string, std::string> &HttpRequest::getHead() const {
 const std::string &HttpRequest::getParameters() const {
 	return _parameters; // query string
 }
+
+std::string HttpRequest::getContentType() {
+	if (_head.find("CONTENT-TYPE") == _head.end()) // если данный данный ключ не найден
+		return ("text/html"); // то возвращаем text/html
+	else {
+		std::string tmp = _head.at("CONTENT-TYPE"); // или же вытаскиваем значение по данному ключу и возвр его
+		return (tmp);
+	}
+}
