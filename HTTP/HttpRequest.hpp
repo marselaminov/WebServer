@@ -19,29 +19,40 @@
 #define CRLF "\r\n"
 #define BODY_SEP "\r\n\r\n" // 2 строки
 
+enum RequestStates {
+	PARSE_QUERY_STR,
+	PARSE_HEAD,
+	PARSE_BODY,
+	PARSE_FINISH
+};
+
 class HttpRequest {
 public:
-	void parse(char *buf);
+	HttpRequest();
+
+	void parse(char *buf, size_t bytes_read);
+	void clear();
+
+	std::string get_path();
+	std::string get_method();
+	const std::string &getParameters() const;
+	const std::map<std::string, std::string> &getHead() const;
+	RequestStates	getState();
+
+private:
+	std::string							_strBuf;
+	std::string							_method;
+	std::string							_path;
+	std::string							_parameters; // query string
+	std::vector<ChunkedRequest *>		_chunk;
+	std::map<std::string, std::string>	_head;
+	RequestStates						_state;
+
 	void parseHead();
 	void parseBody();
 	void handleChunk(size_t startIndex);
 	void parseQueryString();
-
-	std::string get_path();
-	std::string get_method();
-private:
-	std::string _strBuf;
-	std::string _method;
-	std::string _path;
-	std::string _parameters; // query string
-	std::vector<ChunkedRequest *> _chunk;
-public:
-	const std::string &getParameters() const;
-
-private:
-	std::map<std::string, std::string>	_head;
-public:
-	const std::map<std::string, std::string> &getHead() const;
+	void handleContentBody();
 };
 
 #endif //WEBSERV_HTTPREQUEST_HPP

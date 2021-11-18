@@ -21,6 +21,7 @@ public:
 	HttpResponse();
 	void generate(Server &server, HttpRequest &request);
 	std::string getResponse();
+	void clear();
 private:
 	std::string get_loc(Server &server, HttpRequest &request);
 	void 		check_method(const std::string& method);

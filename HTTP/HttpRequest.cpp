@@ -5,13 +5,30 @@
 #include <algorithm>
 #include "HttpRequest.hpp"
 
-void HttpRequest::parse(char *buf) {
-	_strBuf = std::string(buf);
+HttpRequest::HttpRequest() : _state(PARSE_QUERY_STR){
+}
+
+void HttpRequest::clear() {
+	_strBuf.clear();
+	_method.clear();
+	_path.clear();
+	_parameters.clear();
+	_head.clear();
+	_state = PARSE_QUERY_STR;
+}
+
+void HttpRequest::parse(char *buf, size_t bytes_read) {
+	_strBuf.append(buf, bytes_read);
 	std::cout << CYAN"ALL BUFFER SIZE (BEFORE BODY BLOCK START) : " RESET << _strBuf.size() << std::endl;
 	std::cout << YELLOW << _strBuf << RESET <<  std::endl;
-	parseQueryString();
-	parseHead();
-	parseBody();
+	switch (_state) {
+		case PARSE_QUERY_STR:
+			parseQueryString();
+		case PARSE_HEAD:
+			parseHead();
+		case PARSE_BODY:
+			parseBody();
+	}
 }
 
 void HttpRequest::parseQueryString() {
@@ -21,14 +38,15 @@ void HttpRequest::parseQueryString() {
 	std::cout << GREEN"METHOD : " RESET << _method << std::endl;// для себя
 	std::cout << GREEN"PATH : " RESET << _path << std::endl;// для себя
 
-	size_t i = 0;
+	size_t i;
 	i = _path.find('?');
 	if (_path.find('?') != std::string::npos)
 	{
 		_parameters = std::string(_path, i + 1);
 		_path.erase(_path.find('?'), _path.size() - _path.find('?'));
 	}
-	std::cout << GREEN"URL : " RESET << _parameters << std::endl; // для себя
+	std::cout << GREEN"PARAMETERS : " RESET << _parameters << std::endl; // для себя
+	_state = PARSE_HEAD;
 }
 
 void HttpRequest::parseHead() {
@@ -39,6 +57,7 @@ void HttpRequest::parseHead() {
 		std::transform(key.begin(), key.end(), key.begin(), toupper);
 		_head.insert(std::pair<std::string, std::string>(key, value));
 	}
+	_state = PARSE_BODY;
 	// код ниже для себя (печатаю содержимое мапы head)
 	std::cout << GREEN"HEAD:" RESET << std::endl;
 	std::map<std::string, std::string>::const_iterator it;
@@ -56,10 +75,19 @@ void HttpRequest::parseBody() {
 	std::cout << GREEN"BODY START INDEX : " RESET << start << std::endl;
 	if (_head.find("TRANSFER-ENCODING")->second == "chunked")
 		handleChunk(start);
+	else if (_head.find("CONTENT-LENGTH") != _head.end())
+		handleContentBody();
+	else
+		_state = PARSE_FINISH;
+}
+
+void HttpRequest::handleContentBody() {
+	_state = PARSE_FINISH;
 }
 
 void HttpRequest::handleChunk(size_t startIndex) {
 	// в этой функции обрабатываются чанки
+	_state = PARSE_FINISH;
 }
 
 std::string HttpRequest::get_path() {
@@ -76,4 +104,8 @@ const std::map<std::string, std::string> &HttpRequest::getHead() const {
 
 const std::string &HttpRequest::getParameters() const {
 	return _parameters; // query string
+}
+
+RequestStates HttpRequest::getState() {
+	return _state;
 }
