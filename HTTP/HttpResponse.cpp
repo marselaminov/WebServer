@@ -8,6 +8,14 @@ HttpResponse::HttpResponse() {
 	setStatusMessages();
 }
 
+void HttpResponse::clear() {
+	_to_send.clear();
+	_body.clear();
+	_head.clear();
+	_loc_name.clear();
+	_merged_path.clear();
+}
+
 void HttpResponse::generate(Server &server, HttpRequest &request) {
 	_code = 200;
 	int error_flag = 0;

@@ -68,19 +68,6 @@ std::string get_dir_content(std::string &path, std::vector<t_content> &dir_conte
 		}
 		closedir(dir);
 	}
-//	for (size_t i = 0; i < dir_content.size(); ++i)
-//	{
-//		ss << dir_content[i].name;
-//		for (int j = 0; j < 20 - dir_content[i].name.size(); ++j) {
-//			ss << " ";
-//		}
-//		ss << "\t" << dir_content[i].size
-//		<< "\t" << dir_content[i].ref;
-//		for (int j = 0; j < 20 - dir_content[i].ref.size(); ++j) {
-//			ss << " ";
-//		}
-//		ss << "\t" << dir_content[i].last_mode;
-//	}
 	return ss.str();
 }
 
@@ -94,20 +81,10 @@ void	get_title(std::stringstream &response, std::string &path){
 				<< path <<
 				"</title>"
 				"<style>"
-//				"#q {"
-//				"background:#477ab9;"
-//				"width:100%;"
-//				"-webkit-transition: all 0.4s ease-in-out;"
-//				"-moz-transition: all 0.4s ease-in-out;"
-//				"-ms-transition: all 0.4s ease-in-out;"
-//				"-o-transition: all 0.4s ease-in-out;"
-//				"transition: all 0.4s ease-in-out;"
-//				"}"
-//				"#q:hover { "
-//				"background:#3D689C;"
-//				"}"
 				"canvas {"
 				"position:absolute;"
+				"top: 0px;"
+				"right: 0px;"
 				"z-index:-1;"
 				"}"
 				"</style>"
@@ -138,33 +115,30 @@ void	get_body(std::stringstream &response, std::vector<t_content> &dir_content) 
 	response << "<center>";
 	response << "<div id=\"aaa\">";
 	response <<	"<listing>";
+	response << "<font color=\"white\" >";
 	for (size_t i = 0; i < dir_content.size(); ++i)
 	{
 		if (dir_content[i].name[0] == '.' && dir_content[i].name != "..")
 			continue;
-//		<a href="URL">текст ссылки</a>
-		if (dir_content[i].size == 0)
-			response << "<img src=\"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTD0oydsq269jJlxvwuNV1DYJjtUbQ29VqEHA&usqp=CAU\" width=\"20\" height=\"20\">";
-		else
+		if (dir_content[i].size == 0) // folder
+			response << "<img src=\"https://icons-for-free.com/iconfiles/png/512/folder-131964753094019398.png\" width=\"20\" height=\"20\">";
+		else //file
 			response << "<img src=\"https://rubin-spb.ru/wp-content/uploads/2021/02/file.png\" width=\"20\" height=\"20\">";
 		response << 	"<a href=\"";
 		response << dir_content[i].name;
-		response << "\">";
+		response << "\" style=\"color: white\">";
 		response << dir_content[i].name << "</a>";
 		for (unsigned long j = 0; j < 20 - dir_content[i].name.size(); ++j) {
 			response << " ";
 		}
 		response << "\t" << dir_content[i].size;
-//		   << "\t" << dir_content[i].ref;
-//		for (int j = 0; j < 20 - dir_content[i].ref.size(); ++j) {
-//			response << " ";
-//		}
 		response << "\t" << dir_content[i].last_mode;
 	}
 }
 
 void	get_close(std::stringstream &response){
-	response << "</listing>"
+	response << "</font>"
+				"</listing>"
 				"</div>"
 				"</center>"
 				"</body>"
@@ -176,7 +150,6 @@ std::string get_autoindex(std::string &path, std::string &root){
 	std::vector<t_content> dir_content;
 	std::stringstream response;
 
-//	std::cout << path << " " << root << std::endl;
 
 	str = get_dir_content(path, dir_content, root);
 	get_title(response, path);

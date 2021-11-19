@@ -56,6 +56,9 @@ public:
 	int getErrorPageCode() const;
 
 	void setAuthBasicUserFile(const std::string &authBasicUserFile);
+
+	std::string getHost() const;
+
 private:
 	struct sockaddr_in					_sockAddr;
 public:
