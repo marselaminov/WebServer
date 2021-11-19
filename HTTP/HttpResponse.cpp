@@ -271,3 +271,7 @@ void HttpResponse::setStatusMessages() {
 	_status_messages[500] = "Internal Server Error";
 	_status_messages[501] = "Not Implemented";
 }
+
+void HttpResponse::setCode(int code) {
+	_code = code;
+}

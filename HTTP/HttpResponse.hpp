@@ -42,6 +42,10 @@ private:
 	t_location _location;
 	std::string _loc_name;
 	int _code;
+public:
+	void setCode(int code);
+
+private:
 	struct stat _fileInfo;
 	std::string _merged_path;
 	std::map<int, std::string> _status_messages;

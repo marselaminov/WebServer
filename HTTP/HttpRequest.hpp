@@ -38,6 +38,7 @@ public:
 	const std::string &getParameters() const;
 	const std::map<std::string, std::string> &getHead() const;
 	RequestStates	getState();
+	std::string getContentType();
 
 private:
 	std::string							_strBuf;

@@ -109,3 +109,10 @@ const std::string &HttpRequest::getParameters() const {
 RequestStates HttpRequest::getState() {
 	return _state;
 }
+
+std::string HttpRequest::getContentType() {
+	if (_head.find("CONTENT_TYPE") == _head.end())
+		return ("text/html"); // если нет значения
+	else
+		return (_head.at("CONTENT_TYPE")); // достаем значение по ключу
+}

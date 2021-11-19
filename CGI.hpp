@@ -8,6 +8,7 @@
 #include "../HTTP/HttpRequest.hpp"
 #include "../HTTP/HttpResponse.hpp"
 #include "Server.hpp"
+#include <unistd.h>
 
 class HttpRequest;
 
@@ -16,11 +17,9 @@ class HttpResponse;
 class CGI {
 public:
 	CGI(Server *server, HttpRequest *request, HttpResponse *response, char *cgiPath);
-
 	virtual ~CGI();
-
 	void exec();
-
+	void handleBody();
 
 private:
 	char **_env;

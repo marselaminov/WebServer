@@ -51,6 +51,11 @@ CGI::CGI(Server *server, HttpRequest *request, HttpResponse *response, char *cgi
 	//----------------------------------------------------------------------------------------------------------------------
 	// execute CGI part (execute cgi script with execve and forked process)
 	exec();
+	handleBody();
+}
+
+void CGI::handleBody() {
+
 }
 
 CGI::~CGI() {}
@@ -82,4 +87,49 @@ void CGI::exec() {
 
 	// записываем во входящий поток наш body
 	write(fileFd[0], _request->getBody().c_str(), _request->getBody().size());
+	// перемещаем указатель в начало файла
+	lseek(fileFd[0], 0, 0);
+
+	// создаем дочерний процесс
+	pid = fork();
+	if (pid == -1) { // если дочерний процесс не создался
+		_response->setCode(500);
+		throw std::runtime_error("Error forking parent process");
+	}
+	else if (pid == 0) { //
+		dup2(fileFd[0], 0); // подменяем наши дескрипторы для запуска программы
+		dup2(fileFd[1], 1);
+		// запускаем нашу cgi программу в дочернем процессе, в случае успеха код уже ниже условия не пойдет
+		if (execve(_cgiPath, NULL, _env) == -1)
+			throw std::runtime_error("Error executing child process");
+		std::cerr << "Error status: 500" << std::endl;
+	}
+	else {
+		wait(NULL); // ожидаем завершения дочернего процесса и продолжаем работу уже в родит процессе
+		char buff[10000];
+		lseek(fileFd[1], 0, 0); // перемещаем указатель в начало файла
+		ssize_t bytes = 1;
+		while (bytes > 0) { // считываем пока не ошибка(-1) или не конец файла(0)
+			bzero(buff, 10000); // очищаем наш буфер , в который считываем из файлового потока
+			bytes = read(fileFd[1], buff, 10000); // считываем в буфер 10000 байт
+			_bodySize += bytes; // определяем размер тела
+			body += buff; // записываем само тело запроса в стрингу
+		}
+	}
+
+	// подменяем дескрипторы
+	dup2(oldFd[0], 0);
+	dup2(oldFd[1], 1);
+	// закрываем файловые потоки
+	fclose(file[0]);
+	fclose(file[1]);
+	// закрываем дескрипторы
+	close(fileFd[0]);
+	close(fileFd[1]);
+	close(oldFd[0]);
+	close(oldFd[1]);
+
+	// проверяем нет ли процесса zombie (незавершенный дочерний процесс)
+	if (pid == 0)
+		exit(0);
 }
