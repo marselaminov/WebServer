@@ -113,7 +113,11 @@ void HttpResponse::POST_request() { // функция вызывается в б
 					i++;
 			}
 			std::string cgiPath = tmp.substr(i, (tmp.size() - i));
-			// creating CGI would be in here
+//			try
+//				// create _cgi
+//			catch {
+//				std::cerr << e.what() << std::endl;
+//			}
 		}
 	}
 	else

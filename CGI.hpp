@@ -19,8 +19,6 @@ public:
 
 	virtual ~CGI();
 
-	void setEnv(Server *server);
-
 	void exec();
 
 

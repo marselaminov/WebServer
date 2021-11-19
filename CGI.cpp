@@ -47,7 +47,39 @@ CGI::CGI(Server *server, HttpRequest *request, HttpResponse *response, char *cgi
 		std::string tmp = it->first + "=" + it->second;
 		_env[i] = strdup(tmp.c_str());
 	}
-
+	tmpEnv.clear();
+	//----------------------------------------------------------------------------------------------------------------------
+	// execute CGI part (execute cgi script with execve and forked process)
+	exec();
 }
 
 CGI::~CGI() {}
+
+void CGI::exec() {
+	std::string body;
+	FILE *file[2]; // переменная, в которую будет сохранен указатель на управляющую таблицу открываемого потока данных
+	pid_t pid; // для создания дочернего процесса
+	int oldFd[2]; // для сохранения старого дескриптора и подмены
+	int fileFd[2]; // дескриптор файловых потоков
+
+	// создаем копии наших потоков ввода и выводв и сохраяем
+	oldFd[0] = dup(0);
+	oldFd[1] = dup(1);
+	if (oldFd[0] == -1 || oldFd[1] == -1)
+		throw std::runtime_error("Error saving file descriptor");
+
+	// создаем файловый поток данных
+	file[0] = tmpfile();
+	file[1] = tmpfile();
+	if (!file[0] || !file[1])
+		throw std::runtime_error("Error creating file for temporary work");
+
+	// определяем дескриптор файла, связанного с файловым потоком данных
+	fileFd[0] = fileno(file[0]);
+	fileFd[1] = fileno(file[1]);
+	if (fileFd[0] == -1 || fileFd[1] == -1)
+		throw std::runtime_error("Error creating file descriptor");
+
+	// записываем во входящий поток наш body
+	write(fileFd[0], _request->getBody().c_str(), _request->getBody().size());
+}
