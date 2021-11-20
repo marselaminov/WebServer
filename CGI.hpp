@@ -27,6 +27,7 @@ private:
 	HttpResponse *_response;
 	HttpRequest *_request;
 	long _bodySize;
+	std::string _body;
 };
 
 #endif //WEBSERVER_CGI_HPP

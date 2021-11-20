@@ -38,6 +38,10 @@ private:
 
 	std::string _to_send;
 	std::string	_body;
+public:
+	void setBody(const std::string &body);
+
+private:
 	std::string _head;
 	t_location _location;
 	std::string _loc_name;

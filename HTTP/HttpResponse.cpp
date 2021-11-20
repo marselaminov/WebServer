@@ -275,3 +275,7 @@ void HttpResponse::setStatusMessages() {
 void HttpResponse::setCode(int code) {
 	_code = code;
 }
+
+void HttpResponse::setBody(const std::string &body) {
+	_body = body;
+}

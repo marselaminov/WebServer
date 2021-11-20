@@ -39,6 +39,7 @@ public:
 	const std::map<std::string, std::string> &getHead() const;
 	RequestStates	getState();
 	std::string getContentType();
+	void setContentType(std::string);
 
 private:
 	std::string							_strBuf;

@@ -116,3 +116,7 @@ std::string HttpRequest::getContentType() {
 	else
 		return (_head.at("CONTENT_TYPE")); // достаем значение по ключу
 }
+
+void HttpRequest::setContentType(std::string contentType) {
+	_head["CONTENT-TYPE"] = contentType;
+}

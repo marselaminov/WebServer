@@ -54,14 +54,23 @@ CGI::CGI(Server *server, HttpRequest *request, HttpResponse *response, char *cgi
 	handleBody();
 }
 
-void CGI::handleBody() {
-
+void CGI::handleBody() { //text/html; charset=utf-8
+	size_t i;
+	std::string cgiHead;
+	if (_body.find(BODY_SEP, 0) != std::string::npos) { // если находим два переноса строки то заходим в условие
+		i = _body.find(BODY_SEP, 0); // ищем конец заголовка запроса
+		cgiHead = std::string(_body, 0, (i + 4)); // записываем в head
+		_body = std::string(_body, (i + 4)); // перезаписываем тело запроса
+		if (cgiHead.find("Status: ") != std::string::npos)
+			_response->setCode(std::atoi(cgiHead.substr(8, 3).c_str()));
+		if ((i = cgiHead.find("Content-Type: ", 0)) != std::string::npos)
+			_request->setContentType(cgiHead.substr(i + 14, 24)); // //text/html; charset=utf-8 (24 chars)
+	}
 }
 
 CGI::~CGI() {}
 
 void CGI::exec() {
-	std::string body;
 	FILE *file[2]; // переменная, в которую будет сохранен указатель на управляющую таблицу открываемого потока данных
 	pid_t pid; // для создания дочернего процесса
 	int oldFd[2]; // для сохранения старого дескриптора и подмены
@@ -113,7 +122,7 @@ void CGI::exec() {
 			bzero(buff, 10000); // очищаем наш буфер , в который считываем из файлового потока
 			bytes = read(fileFd[1], buff, 10000); // считываем в буфер 10000 байт
 			_bodySize += bytes; // определяем размер тела
-			body += buff; // записываем само тело запроса в стрингу
+			_body += buff; // записываем само тело запроса в стрингу
 		}
 	}
 
