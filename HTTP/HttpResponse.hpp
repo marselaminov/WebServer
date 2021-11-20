@@ -29,6 +29,7 @@ private:
 	void check_dir(HttpRequest &request);
 	void GET_request();
 	void POST_request();
+	void DELETE_request();
 	void error_body(Server &server);
 	void standart_error_body();
 	void setStatusMessages();

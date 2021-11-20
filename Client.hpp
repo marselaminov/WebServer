@@ -16,7 +16,7 @@
 //#define _Client___Ready_To_Send 4
 //#define _Client___Ready_To_Close 5
 
-#define BUFSIZE 5000
+#define BUFSIZE 10000
 
 class HttpResponse;
 class HttpRequest;

@@ -14,6 +14,7 @@ void HttpRequest::clear() {
 	_path.clear();
 	_parameters.clear();
 	_head.clear();
+	_body.clear();
 	_state = PARSE_QUERY_STR;
 }
 
@@ -69,12 +70,12 @@ void HttpRequest::parseHead() {
 }
 
 void HttpRequest::parseBody() {
-	size_t start = _strBuf.find(BODY_SEP);
-	std::cout << GREEN"HEAD END INDEX : " RESET << start << std::endl;
-	start += 4;
-	std::cout << GREEN"BODY START INDEX : " RESET << start << std::endl;
+//	size_t start = _strBuf.find(BODY_SEP);
+//	std::cout << GREEN"HEAD END INDEX : " RESET << start << std::endl;
+//	start += 4;
+//	std::cout << GREEN"BODY START INDEX : " RESET << start << std::endl;
 	if (_head.find("TRANSFER-ENCODING")->second == "chunked")
-		handleChunk(start);
+		handleChunk(0);
 	else if (_head.find("CONTENT-LENGTH") != _head.end())
 		handleContentBody();
 	else
@@ -82,7 +83,14 @@ void HttpRequest::parseBody() {
 }
 
 void HttpRequest::handleContentBody() {
-	_state = PARSE_FINISH;
+	int cont_len = stoi(_head["CONTENT-LENGTH"]);
+	int t = _strBuf.size() - _strBuf.find(BODY_SEP) + 4;
+	if (_strBuf.size() - _strBuf.find(BODY_SEP) + 4 == cont_len){
+
+		_body = std::string (_strBuf, _strBuf.find(BODY_SEP) + 4, cont_len);
+		std::cout << "BODY:\n" << _body << std::endl;
+		_state = PARSE_FINISH;
+	}
 }
 
 void HttpRequest::handleChunk(size_t startIndex) {

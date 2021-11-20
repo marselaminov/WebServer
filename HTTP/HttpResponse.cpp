@@ -31,10 +31,11 @@ void HttpResponse::generate(Server &server, HttpRequest &request) {
 		try {
 			if (request.get_method() == "GET") {
 				GET_request();
-//				std::cout << _location.cgi_path << std::endl;
 			}
 			if (request.get_method() == "DELETE")
-			{}
+			{
+				DELETE_request();
+			}
 			if (request.get_method() == "POST")
 				POST_request();
 		}
@@ -149,6 +150,28 @@ void HttpResponse::GET_request() {
 	else{
 		_code = 404;
 		throw std::exception();
+	}
+}
+
+void HttpResponse::DELETE_request() {
+	if (S_ISDIR(_fileInfo.st_mode))
+	{
+		_code = 413;
+		throw std::exception();
+	}
+	if( remove( _merged_path.c_str()) != 0 )
+	{
+		_code = 501;
+		throw std::exception();
+	}
+	else
+	{
+		_body = "<html>"
+				"<body>"
+				"<h1>File deleted.</h1>"
+				"</body>"
+				"</html>";
+		_code = 200;
 	}
 }
 

@@ -22,8 +22,8 @@ CGI::CGI(Server *server, HttpRequest *request, HttpResponse *response, char *cgi
 	}
 	tmpEnv["GATEWAY_INTERFACE"] = "CGI/1.1"; // содержит информацию о версии CGI(CGI/версия)
 	tmpEnv["SERVER_PROTOCOL"] = "HTTP/1.1";
-	tmpEnv["SERVER_PORT"] = std::to_string(server->getPort()); // начение переменной содержит номер порта, на который был послан запрос
-	tmpEnv["AUTH_TYPE"] = "basic"; // значение переменной специфицирует метод аутотентификации
+	tmpEnv["SERVER_PORT"] = std::to_string(server->getPort()); // значение переменной содержит номер порта, на который был послан запрос
+	tmpEnv["AUTH_TYPE"] = "basic"; // значение переменной специфицирует метод аутентификации
 //	tmpEnv["CONTENT_LENGTH"] = std::to_string(_request->getBody().size()); // значение переменной соответствует длине стандартного входного потока в символах
 	tmpEnv["CONTENT_TYPE"] = _request->getContentType(); // переменная специфицирована для запросов содержащих дополнительную информацию, таких как HTTP POST и PUT, и содержит тип данных этой информации
 	tmpEnv["PATH_INFO"] = _request->get_path(); // значение переменной содержит полученный от клиента виртуальный путь до cgi-модуля
@@ -31,7 +31,7 @@ CGI::CGI(Server *server, HttpRequest *request, HttpResponse *response, char *cgi
 	tmpEnv["QUERY_STRING"] = _request->get_path() + "?" + _request->getParameters(); // значение переменной - строка символов после "?" в URL соответствующему данному запросу, эта инфа не декодируется сервером
 	tmpEnv["REMOTE_ADDRESS"] = server->getHost(); // содержит IP адрес клиента
 	tmpEnv["REMOTE_IDENT"] = "basic"; // содержит имя пользователя, полученное от сервера (если сервер поддерживает аутентификацию согласно RFC 931)
-	tmpEnv["REMOTE_USER"] = "basic"; // содержит имя пользователя в случае аутотентификации
+	tmpEnv["REMOTE_USER"] = "basic"; // содержит имя пользователя в случае аутентификации
 	tmpEnv["REQUEST_METHOD"] = _request->get_method(); // метод запроса, который был использован POST,GET и т.д.
 	tmpEnv["REQUEST_URI"] = _request->get_path(); // url
 	tmpEnv["SCRIPT_NAME"] = _request->get_path(); // виртуальный путь к исполняемому модулю, используемый для получения URL

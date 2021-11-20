@@ -48,6 +48,7 @@ private:
 	std::string							_parameters; // query string
 	std::vector<ChunkedRequest *>		_chunk;
 	std::map<std::string, std::string>	_head;
+	std::string							_body;
 	RequestStates						_state;
 
 	void parseHead();
