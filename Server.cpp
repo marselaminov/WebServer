@@ -115,3 +115,7 @@ const sockaddr_in &Server::getSockAddr() const {
 std::string Server::getHost() const {
 	return _host;
 }
+
+const std::string &Server::getServerName() const {
+	return _serverName;
+}

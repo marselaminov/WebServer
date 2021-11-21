@@ -4,10 +4,9 @@
 
 #include "CGI.hpp"
 
-CGI::CGI(Server *server, HttpRequest *request, HttpResponse *response, char *cgiPath) {
+CGI::CGI(Server *server, HttpRequest *request, std::string cgiPath) {
 	_cgiPath = cgiPath;
 	_request = request;
-	_response = response;
 	_bodySize = 0;
 	// ----------------------------------------
 	// перед запуском CGI модуля дадим значения переменным окружения
@@ -62,9 +61,13 @@ void CGI::handleBody() { //text/html; charset=utf-8
 		cgiHead = std::string(_body, 0, (i + 4)); // записываем в head
 		_body = std::string(_body, (i + 4)); // перезаписываем тело запроса
 		if (cgiHead.find("Status: ") != std::string::npos)
-			_response->setCode(std::atoi(cgiHead.substr(8, 3).c_str()));
+//			_response->setCode(std::atoi(cgiHead.substr(8, 3).c_str()));
+			_code = std::atoi(cgiHead.substr(8, 3).c_str());
 		if ((i = cgiHead.find("Content-Type: ", 0)) != std::string::npos)
 			_request->setContentType(cgiHead.substr(i + 14, 24)); // //text/html; charset=utf-8 (24 chars)
+//		size_t bodySize = static_cast<size_t>(_bodySize);
+//		_response->setBodySize(bodySize - cgiHead.size()); // записываем размер тела
+		_bodySizeForReturn = static_cast<size_t>(_bodySize) - cgiHead.size();
 	}
 }
 
@@ -102,14 +105,14 @@ void CGI::exec() {
 	// создаем дочерний процесс
 	pid = fork();
 	if (pid == -1) { // если дочерний процесс не создался
-		_response->setCode(500);
+		_code = 500;
 		throw std::runtime_error("Error forking parent process");
 	}
 	else if (pid == 0) { //
 		dup2(fileFd[0], 0); // подменяем наши дескрипторы для запуска программы
 		dup2(fileFd[1], 1);
 		// запускаем нашу cgi программу в дочернем процессе, в случае успеха код уже ниже условия не пойдет
-		if (execve(_cgiPath, NULL, _env) == -1)
+		if (execve(_cgiPath.c_str(), NULL, _env) == -1)
 			throw std::runtime_error("Error executing child process");
 		std::cerr << "Error status: 500" << std::endl;
 	}
@@ -141,4 +144,16 @@ void CGI::exec() {
 	// проверяем нет ли процесса zombie (незавершенный дочерний процесс)
 	if (pid == 0)
 		exit(0);
+}
+
+const std::string &CGI::getBody() const {
+	return _body;
+}
+
+int CGI::getCode() const {
+	return _code;
+}
+
+size_t CGI::getBodySizeForReturn() const {
+	return _bodySizeForReturn;
 }

@@ -67,6 +67,8 @@ public:
 private:
 	std::map<std::string, t_location>	_location;
 	std::string							_serverName;
+public:
+	const std::string &getServerName() const;
 
 
 private:

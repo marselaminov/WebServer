@@ -48,6 +48,12 @@ private:
 	int _code;
 	std::string _to_send;
 	std::string	_body;
+	size_t _bodySize;
+public:
+	void setBodySize(size_t bodySize);
+
+private:
+	// после отработки в CGI
 	struct stat _fileInfo;
 	std::string _merged_path;
 	std::map<int, std::string> _status_messages;

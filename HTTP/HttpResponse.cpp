@@ -128,9 +128,17 @@ void HttpResponse::POST_request(HttpRequest &request, Server &server) { // фу�
 			}
 			std::string cgiPath = tmp.substr(i, (tmp.size() - i));
 //			std::cout << cgiPath << std::endl;
+			CGI *cgi;
 			try {
-				CGI *cgi = new CGI(server, request, )
+				cgi = new CGI(&server, &request, cgiPath);
+				_body = cgi->getBody();
+				_code = cgi->getCode();
+				_bodySize = cgi->getBodySizeForReturn();
 			}
+			catch (std::exception &e) {
+				std::cerr << e.what() << std::endl;
+			}
+			delete cgi;
 		}
 	}
 	else
@@ -327,4 +335,8 @@ void HttpResponse::setCode(int code) {
 
 void HttpResponse::setBody(const std::string &body) {
 	_body = body;
+}
+
+void HttpResponse::setBodySize(size_t bodySize) {
+	_bodySize = bodySize;
 }
