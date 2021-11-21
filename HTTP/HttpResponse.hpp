@@ -31,7 +31,7 @@ private:
 	void init(Server &server, HttpRequest &request);
 	void check_dir(HttpRequest &request);
 	void GET_request();
-	void POST_request(HttpRequest &request);
+	void POST_request(HttpRequest &request, Server &server);
 	void DELETE_request();
 	void PUT_request(HttpRequest &request);
 	void error_body(Server &server);

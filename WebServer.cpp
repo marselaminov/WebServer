@@ -8,7 +8,7 @@ WebServer::WebServer() {
 	Parser *parser;
 
 	try {
-		parser = new Parser("../test1.conf");
+		parser = new Parser("../test.conf");
 	}
 	catch (std::exception &e) {
 		std::cout << "Error: " << e.what() << std::endl;

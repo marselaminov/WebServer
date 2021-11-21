@@ -37,7 +37,7 @@ void HttpResponse::generate(Server &server, HttpRequest &request) {
 				DELETE_request();
 			}
 			if (request.get_method() == "POST")
-				POST_request(request);
+				POST_request(request, server);
 		}
 		catch (std::exception &e) {
 			error_flag = 1;
@@ -110,23 +110,27 @@ void HttpResponse::standart_error_body() {
 	_body = buf.str();
 }
 
-void HttpResponse::POST_request(HttpRequest &request) { // функция вызывается в блоке try , можно выкидывать исключения (в классе CGI тоже)
+void HttpResponse::POST_request(HttpRequest &request, Server &server) { // функция вызывается в блоке try , можно выкидывать исключения (в классе CGI тоже)
+	std::cout << BLUE"POST" RESET << std::endl;
 	if (!_location.cgi_path.empty()) {
 		std::cout << BLUE"CGI WORK" RESET << std::endl;
 		std::string tmp = _location.cgi_path;
 		if (tmp.find(".bla", 0, 4) != std::string::npos) {
 			size_t i = tmp.find(".bla", 0, 4);
 			i += 4;
+			std::cout << "i: " << i << " size: " << tmp.size() << std::endl;
 			while (i < tmp.size()) {
+//				std::cout << BLUE"CGI WORK" RESET << std::endl;
 				if (tmp[i] == ' ' || tmp[i] == '\t')
 					i++;
+				else
+					break;
 			}
 			std::string cgiPath = tmp.substr(i, (tmp.size() - i));
-//			try
-//				// create _cgi
-//			catch {
-//				std::cerr << e.what() << std::endl;
-//			}
+//			std::cout << cgiPath << std::endl;
+			try {
+				CGI *cgi = new CGI(server, request, )
+			}
 		}
 	}
 	else
