@@ -53,7 +53,7 @@ private:
 
 	void parseHead();
 	void parseBody();
-	void handleChunk(size_t startIndex);
+	void handleChunk();
 	void parseQueryString();
 	void handleContentBody();
 };
