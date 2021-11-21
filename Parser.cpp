@@ -125,6 +125,8 @@ void	Parser::handleLocation(Server *serv, std::vector<std::string> &lines, size_
 							tmpVector.push_back("GET");
 						else if (!vector[idx].compare("POST"))
 							tmpVector.push_back("POST");
+						else if (!vector[idx].compare("PUT"))
+							tmpVector.push_back("PUT");
 						else if (!vector[idx].compare("DELETE"))
 							tmpVector.push_back("DELETE");
 						else
