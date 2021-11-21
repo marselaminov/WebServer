@@ -42,7 +42,7 @@ std::string	get_value(std::string &line, std::string key) {
 	return (temp);
 }
 
-void	Parser::handleLocation(Server *serv, std::vector<std::string> &lines, size_t *i) {
+void	Parser::handleLocation(Server *serv, std::vector<std::string> &lines, size_t *i, size_t servIdx) {
 	std::string temp;
 	std::map<std::string, t_location> tmpLoc;
 
@@ -152,20 +152,20 @@ void	Parser::handleLocation(Server *serv, std::vector<std::string> &lines, size_
 			throw std::runtime_error("Where locations, man?");
 		}
 	}
-	serv->setLocation(tmpLoc);
+	serv[servIdx].setLocation(tmpLoc);
 }
 
-void	Parser::handleServerBlock(std::string &file) {
+void	Parser::handleServerBlock(std::string &file, size_t i) {
 //	std::cout << file;
 	std::vector<std::string> lines;
 	std::stringstream stream(file);
 	std::string temp;
 
 	while (getline(stream, temp, '\n')) {
-		size_t i = 0;
-		while (temp[i])
-			i++;
-		temp[i] = '\0';
+		size_t j = 0;
+		while (temp[j])
+			j++;
+		temp[j] = '\0';
 		lines.push_back(temp);
 	}
 //	size_t j = 0;
@@ -193,15 +193,16 @@ void	Parser::handleServerBlock(std::string &file) {
 		else if (lines[j].find("error_page:") != std::string::npos)
 			serv->setErrorPage(get_value(lines[j], "error_page:"));
 		else if (lines[j].find("location:") != std::string::npos) {
-			handleLocation(serv, lines, &j);
+			handleLocation(serv, lines, &j, i);
 			break;
 		}
 		else
 			throw std::runtime_error("Error in the config file");
 		j++;
 	}
-//	std::cout << j << std::endl;
-//	std::cout << lines.size() << std::endl;
+	std::cout << j << std::endl;
+	std::cout << i << std::endl;
+	std::cout << lines.size() << std::endl;
 	if (j != lines.size())
 		throw std::runtime_error("Some error in here, ours parser is crap");
 	this->servers.push_back(serv);
@@ -214,22 +215,39 @@ void	Parser::work_with_file(const std::string &file) {
 		throw std::runtime_error("File corrupted");
 	//------------------------------------------
 	std::string	str;
+	std::string	tmp;
 	std::stringstream stream;
 
+	size_t i = 0;
 	while (getline(input, str)) {
+		if (str == "server:") {
+			if (!tmp.empty()) {
+				handleServerBlock(tmp, i);
+				tmp.clear();
+				i++;
+				stream.str().clear();
+			}
+		}
+		else if ((str.find("server:") != std::string::npos && (str.compare(0, 7, "server:")) && str.size() != 7)) {
+			throw std::runtime_error("What the shit with server line?");
+		}
 		stream << str << std::endl;
+		tmp = stream.str();
 	}
-	if (stream.str().empty()) {
+//	if (tmp.find("server:") != std::string::npos)
+//		handleServerBlock(tmp, i);
+	if (stream.str().empty())
 		throw std::runtime_error("Where is data on file, dude?");
-	}
-	//std::cout << stream.str();
+//	std::cout << stream.str() << std::endl;
 	if (stream.str().find("server:") != std::string::npos) {
 		std::string all(stream.str());
-		handleServerBlock(all);
+		handleServerBlock(all, i);
 	}
 	input.close();
 }
 
 Parser::Parser(const std::string &file) {
 	work_with_file(file);
+//	for (std::vector<Server *>::const_iterator i = servers.begin(); i != servers.end(); ++i)
+//		std::cout << *i << std::endl;
 }
