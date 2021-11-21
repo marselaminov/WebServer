@@ -25,6 +25,8 @@ void HttpRequest::parse(char *buf, size_t bytes_read) {
 	switch (_state) {
 		case PARSE_QUERY_STR:
 			parseQueryString();
+			if (_state != PARSE_HEAD)
+				break;
 		case PARSE_HEAD:
 			parseHead();
 			if (_state != PARSE_BODY)
@@ -49,7 +51,8 @@ void HttpRequest::parseQueryString() {
 		_path.erase(_path.find('?'), _path.size() - _path.find('?'));
 	}
 	std::cout << GREEN"PARAMETERS : " RESET << _parameters << std::endl; // для себя
-	_state = PARSE_HEAD;
+	if (_strBuf.find(CRLF) != std::string::npos)
+		_state = PARSE_HEAD;
 }
 
 void HttpRequest::parseHead() {
@@ -63,13 +66,13 @@ void HttpRequest::parseHead() {
 		_state = PARSE_BODY;
 	}
 	// код ниже для себя (печатаю содержимое мапы head)
-	std::cout << GREEN"HEAD:" RESET << std::endl;
-	std::map<std::string, std::string>::const_iterator it;
-	it = _head.begin();
-	while (it != _head.end()) {
-		std::cout << it->first << " : " << it->second << " " << std::endl;
-		++it;
-	}
+//	std::cout << GREEN"HEAD:" RESET << std::endl;
+//	std::map<std::string, std::string>::const_iterator it;
+//	it = _head.begin();
+//	while (it != _head.end()) {
+//		std::cout << it->first << " : " << it->second << " " << std::endl;
+//		++it;
+//	}
 }
 
 void HttpRequest::parseBody() {

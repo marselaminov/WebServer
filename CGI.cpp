@@ -13,12 +13,12 @@ CGI::CGI(Server *server, HttpRequest *request, std::string cgiPath) {
 	std::map<std::string, std::string> tmpEnv;
 
 	tmpEnv["SERVER_SOFTWARE"] = "Lions/777";
-	if (!server->getServerName().empty()) {
-		tmpEnv["SERVER_NAME"] = server->getServerName();
-	} // содержит информацию об имени машины, на которой запущен WWW сервер, символическое имя или IP адрес соответствующие URL
-	else {
-		tmpEnv["SERVER_NAME"] = server->getHost();
-	}
+//	if (!server->getServerName().empty()) {
+//		tmpEnv["SERVER_NAME"] = server->getServerName();
+//	} // содержит информацию об имени машины, на которой запущен WWW сервер, символическое имя или IP адрес соответствующие URL
+//	else {
+//		tmpEnv["SERVER_NAME"] = server->getHost();
+//	}
 	tmpEnv["GATEWAY_INTERFACE"] = "CGI/1.1"; // содержит информацию о версии CGI(CGI/версия)
 	tmpEnv["SERVER_PROTOCOL"] = "HTTP/1.1";
 	tmpEnv["SERVER_PORT"] = std::to_string(server->getPort()); // значение переменной содержит номер порта, на который был послан запрос

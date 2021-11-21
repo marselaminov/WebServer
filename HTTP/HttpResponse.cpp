@@ -48,7 +48,7 @@ void HttpResponse::generate(Server &server, HttpRequest &request) {
 		error_body(server);
 	create_header();
 	_to_send = _head + _body;
-//	std::cout << "RESPONSE:\n" << _to_send << std::endl;
+	std::cout << "RESPONSE:\n" << _to_send << std::endl;
 }
 
 void HttpResponse::create_header() {
@@ -166,7 +166,6 @@ void HttpResponse::PUT_request(HttpRequest &request) {
 	int fd;
 	if ((fd = open(filename.c_str(), O_RDWR | O_CREAT | O_TRUNC, 0755)) < 0) { _code = 500; throw std::exception();}
 	write(fd, file_content.c_str(), file_content.size());
-	_code = 201;
 	close(fd);
 }
 
