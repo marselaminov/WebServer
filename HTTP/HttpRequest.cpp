@@ -15,13 +15,19 @@ void HttpRequest::clear() {
 	_parameters.clear();
 	_head.clear();
 	_body.clear();
+	_chunk.clear(); //todo may be leaks
 	_state = PARSE_QUERY_STR;
 }
 
 void HttpRequest::parse(char *buf, size_t bytes_read) {
 	_strBuf.append(buf, bytes_read);
 //	std::cout << CYAN"ALL BUFFER SIZE (BEFORE BODY BLOCK START) : " RESET << _strBuf.size() << std::endl;
-	std::cout << YELLOW << _strBuf << RESET <<  std::endl;
+//	std::cout << YELLOW << _strBuf << RESET << "\nsize: " << _strBuf.size() <<  std::endl;
+//	if (_strBuf.size()== 10000000)
+//	{
+		std::cout << "\nsize: " << _strBuf.size() <<  std::endl;
+//		throw 3;
+//	}
 	switch (_state) {
 		case PARSE_QUERY_STR:
 			parseQueryString();
@@ -103,59 +109,46 @@ void HttpRequest::handleContentBody() {
 void HttpRequest::handleChunk() {
 	size_t startBody = _strBuf.find(BODY_SEP) + 4;
 	size_t endBody;
+
 	if ((endBody = _strBuf.find("0\r\n\r\n", startBody)) != std::string::npos) {// окончание передачи сообщения определяется наличием последней части с нулевой длиной (0\r\n\r\n)
-		_body = std::string(_strBuf, startBody, endBody - startBody +
-												3); // записали тело запроса (+3 потому что <длина блока в HEX><CRLF>)
+		_body = std::string(_strBuf, startBody, endBody - startBody + 3); // записали тело запроса (+3 потому что <длина блока в HEX><CRLF>)
 		// --------------------------------------------------------------------------------------
 		// дальше создание вектора чанков
 		size_t i = 0;
-		while (i <
-			   _body.size()) { // пробегаемся по циклу по не дойдем до конца тела запроса
+		while (i < _body.size()) { // пробегаемся по циклу по не дойдем до конца тела запроса
 			size_t crlf = 0;
 
-			std::cout << BLUE"GENERATE" RESET << std::endl;
 			ChunkedRequest *chunk = new ChunkedRequest(); // на каждую часть запроса создаем объект чанка
 			_chunk.push_back(chunk); // и закидываем его в вектор
 			// считываем размер каждого чанка
 			if ((crlf = _body.find(CRLF, i)) != std::string::npos) {
 				if (!_chunk.back()->isSizeFull()) {
-					std::string chunkSize = std::string(_body, i,
-														(crlf - i));
-					_chunk.back()->setSize(
-							chunkSize); // временно записываем размер в строку
+					std::string chunkSize = std::string(_body, i, (crlf - i));
+					_chunk.back()->setSize(chunkSize); // временно записываем размер в строку
 					try {
-						_chunk.back()->setSizeFull(
-								true); // в данном методе кастуем размер к инту
+						_chunk.back()->setSizeFull(true); // в данном методе кастуем размер к инту
 					}
 					catch (std::exception &e) {
-						std::cerr << "Some error chunk size"
-								  << std::endl;
+						std::cerr << "Some error chunk size" << std::endl;
 						_state = PARSE_FINISH;
 						break;
 					}
-					if (_chunk.back()->getCastSize() ==
-						0) { // проверяем не конец ли тела запроса (конец тела запроса символизируется нулем)
-						_chunk.back()->setBodyFull(
-								true); // сатвим флаг об окончании и выходим из цикла
+					if (_chunk.back()->getCastSize() == 0) { // проверяем не конец ли тела запроса (конец тела запроса символизируется нулем)
+						_chunk.back()->setBodyFull(true); // сатвим флаг об окончании и выходим из цикла
 						_state = PARSE_FINISH;
 						break;
 					}
-					i = i + crlf + 2 -
-						i; // + 2 crlf - позиция (переходим к содержимому чанка)
+					i = i + crlf + 2 - i; // + 2 crlf - позиция (переходим к содержимому чанка)
 				}
 			}
 			// и читаем содержимое чанка
 			if ((crlf = _body.find(CRLF, i)) != std::string::npos) {
 				if (!_chunk.back()->isBodyFull()) {
 					size_t sizeTmpBody = static_cast<size_t>(_chunk.back()->getCastSize());
-					std::string tmpBody = std::string(_body, i,
-													  sizeTmpBody);
-					_chunk.back()->setBody(
-							tmpBody); // записываем содержимое чанка
-					_chunk.back()->setBodyFull(
-							true); // ставим флажок что заполнили
-					i = i + _chunk.back()->getBody().size() +
-						2; // переходим к следующему блоку чанка (позиция  + размер чанка + 2 crlf
+					std::string tmpBody = std::string(_body, i, sizeTmpBody);
+					_chunk.back()->setBody(tmpBody); // записываем содержимое чанка
+					_chunk.back()->setBodyFull(true); // ставим флажок что заполнили
+					i = i + _chunk.back()->getBody().size() + 2; // переходим к следующему блоку чанка (позиция  + размер чанка + 2 crlf
 				}
 			}
 		}

@@ -36,7 +36,7 @@ void HttpResponse::generate(Server &server, HttpRequest &request) {
 			{
 				DELETE_request();
 			}
-			if (request.get_method() == "POST")
+			if (request.get_method() == "POST" || request.get_method() == "PUT")
 				POST_request(request, server);
 		}
 		catch (std::exception &e) {
@@ -48,7 +48,7 @@ void HttpResponse::generate(Server &server, HttpRequest &request) {
 		error_body(server);
 	create_header();
 	_to_send = _head + _body;
-	std::cout << "RESPONSE:\n" << _to_send << std::endl;
+	std::cout << "RESPONSE: " << _head << " " << _body.size() << std::endl;
 }
 
 void HttpResponse::create_header() {
@@ -112,7 +112,7 @@ void HttpResponse::standart_error_body() {
 
 void HttpResponse::POST_request(HttpRequest &request, Server &server) { // функция вызывается в блоке try , можно выкидывать исключения (в классе CGI тоже)
 	std::cout << BLUE"POST" RESET << std::endl;
-	if (!_location.cgi_path.empty()) {
+	if (!_location.cgi_path.empty() && request.get_method() == "POST") {
 		std::cout << BLUE"CGI WORK" RESET << std::endl;
 		std::string tmp = _location.cgi_path;
 		if (tmp.find(".bla", 0, 4) != std::string::npos) {
@@ -221,7 +221,7 @@ void HttpResponse::init(Server &server, HttpRequest &request) {
 		index.erase(0, 1);
 	_merged_path += index;
 
-	if (stat(_merged_path.c_str(), &_fileInfo) == -1) {  //информация о файле или диреткории по пути merged_Path
+	if (stat(_merged_path.c_str(), &_fileInfo) == -1 && request.get_method().find("PUT") == std::string::npos) {  //информация о файле или диреткории по пути merged_Path
 		_code = 404;
 		throw std::exception();
 	}
