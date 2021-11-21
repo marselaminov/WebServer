@@ -13,17 +13,17 @@ public:
 
 	virtual ~ChunkedRequest();
 
-	const std::string &getStrSize() const;
+	const std::string &getSize() const;
 
-	void setStrSize(const std::string &strSize);
+	void setSize(const std::string &size);
 
-	const std::string &getBuf() const;
+	const std::string &getBody() const;
 
-	void setBuf(const std::string &buf);
+	void setBody(const std::string &body);
 
-	bool isBufFull() const;
+	bool isBodyFull() const;
 
-	void setBufFull(bool bufFull);
+	void setBodyFull(bool bodyFull);
 
 	bool isSizeFull() const;
 
@@ -34,9 +34,9 @@ public:
 	void setCastSize(int castSize);
 
 private:
-	std::string _strSize;
-	std::string _buf;
-	bool _bufFull;
+	std::string _size;
+	std::string _body;
+	bool _bodyFull;
 	bool _sizeFull;
 	int _castSize;
 };

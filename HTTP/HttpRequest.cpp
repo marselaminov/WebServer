@@ -70,12 +70,11 @@ void HttpRequest::parseHead() {
 }
 
 void HttpRequest::parseBody() {
-//	size_t start = _strBuf.find(BODY_SEP);
 //	std::cout << GREEN"HEAD END INDEX : " RESET << start << std::endl;
 //	start += 4;
 //	std::cout << GREEN"BODY START INDEX : " RESET << start << std::endl;
 	if (_head.find("TRANSFER-ENCODING")->second == "chunked")
-		handleChunk(0);
+		handleChunk();
 	else if (_head.find("CONTENT-LENGTH") != _head.end())
 		handleContentBody();
 	else
@@ -93,9 +92,56 @@ void HttpRequest::handleContentBody() {
 	}
 }
 
-void HttpRequest::handleChunk(size_t startIndex) {
-	// в этой функции обрабатываются чанки
-	_state = PARSE_FINISH;
+void HttpRequest::handleChunk() {
+	size_t startBody = _strBuf.find(BODY_SEP) + 4;
+	size_t endBody = _strBuf.find("0\r\n\r\n", startBody); // окончание передачи сообщения определяется наличием последней части с нулевой длиной (0\r\n\r\n)
+	_body = std::string(_strBuf, startBody, endBody - startBody + 3); // записали тело запроса (+3 потому что <длина блока в HEX><CRLF>)
+	// --------------------------------------------------------------------------------------
+	// дальше создание вектора чанков
+	size_t i = 0;
+	while (i < _body.size()) { // пробегаемся по циклу по не дойдем до конца тела запроса
+		size_t crlf = 0;
+		ChunkedRequest *chunk = new ChunkedRequest(); // на каждую часть запроса создаем объект чанка
+		_chunk.push_back(chunk); // и закидываем его в вектор
+		// считываем размер каждого чанка
+		if ((crlf = _body.find(CRLF, i)) != std::string::npos) {
+			if (!_chunk.back()->isSizeFull()) {
+				std::string chunkSize = std::string(_body, i, (crlf - i));
+				_chunk.back()->setSize(chunkSize); // временно записываем размер в строку
+				try {
+					_chunk.back()->setSizeFull(true); // в данном методе кастуем размер к инту
+				}
+				catch (std::exception &e) {
+					std::cerr << "Some error chunk size" << std::endl;
+					_state = PARSE_FINISH;
+					break;
+				}
+				if (_chunk.back()->getCastSize() == 0) { // проверяем не конец ли тела запроса (конец тела запроса символизируется нулем)
+					_chunk.back()->setBodyFull(true); // сатвим флаг об окончании и выходим из цикла
+					_state = PARSE_FINISH;
+					break;
+				}
+				i = i + crlf + 2 - i; // + 2 crlf - позиция (переходим к содержимому чанка)
+			}
+		}
+		// и читаем содержимое чанка
+		if ((crlf = _body.find(CRLF, i)) != std::string::npos) {
+			if (!_chunk.back()->isBodyFull()) {
+				size_t sizeTmpBody = static_cast<size_t>(_chunk.back()->getCastSize());
+				std::string tmpBody = std::string(_body, i, sizeTmpBody);
+				_chunk.back()->setBody(tmpBody); // записываем содержимое чанка
+				_chunk.back()->setBodyFull(true); // ставим флажок что заполнили
+				i = i + _chunk.back()->getBody().size() + 2; // переходим к следующему блоку чанка (позиция  + размер чанка + 2 crlf
+			}
+		}
+	}
+	// --------------------------------------------------------------------------------------
+	// читстим тело запроса и пересаписываем его из сформированных частей
+	_body.clear();
+	for (size_t j = 0; j < _chunk.size(); ++j) {
+		size_t bodySize = static_cast<size_t>(_chunk[j]->getCastSize());
+		_body += std::string(_chunk[j]->getBody(), 0, bodySize);
+	}
 }
 
 std::string HttpRequest::get_path() {

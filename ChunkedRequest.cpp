@@ -6,33 +6,33 @@
 
 ChunkedRequest::ChunkedRequest() {
 	_sizeFull = false;
-	_bufFull = false;
+	_bodyFull = false;
 }
 
 ChunkedRequest::~ChunkedRequest() {}
 
-const std::string &ChunkedRequest::getStrSize() const {
-	return _strSize;
+const std::string &ChunkedRequest::getSize() const {
+	return _size;
 }
 
-void ChunkedRequest::setStrSize(const std::string &strSize) {
-	_strSize += strSize;
+void ChunkedRequest::setSize(const std::string &size) {
+	_size += size;
 }
 
-const std::string &ChunkedRequest::getBuf() const {
-	return _buf;
+const std::string &ChunkedRequest::getBody() const {
+	return _body;
 }
 
-void ChunkedRequest::setBuf(const std::string &buf) {
-	_buf += buf;
+void ChunkedRequest::setBody(const std::string &body) {
+	_body += body;
 }
 
-bool ChunkedRequest::isBufFull() const {
-	return _bufFull;
+bool ChunkedRequest::isBodyFull() const {
+	return _bodyFull;
 }
 
-void ChunkedRequest::setBufFull(bool bufFull) {
-	_bufFull = bufFull;
+void ChunkedRequest::setBodyFull(bool bodyFull) {
+	_bodyFull = bodyFull;
 }
 
 bool ChunkedRequest::isSizeFull() const {
@@ -42,7 +42,7 @@ bool ChunkedRequest::isSizeFull() const {
 void ChunkedRequest::setSizeFull(bool sizeFull) {
 	_sizeFull = sizeFull;
 	if (_sizeFull == true) {
-		unsigned long tmp = std::stoul(_strSize, nullptr, 16); // размер каждого чанка(куска) по документации идет в в шестнадцатеричном виде
+		unsigned long tmp = std::stoul(_size, nullptr, 16); // размер каждого чанка(куска) по документации идет в в шестнадцатеричном виде
 		_castSize = static_cast<int>(tmp); // далее необходимо кастовать к инту
 	}
 }
