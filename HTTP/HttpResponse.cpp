@@ -37,7 +37,7 @@ void HttpResponse::generate(Server &server, HttpRequest &request) {
 				DELETE_request();
 			}
 			if (request.get_method() == "POST")
-				POST_request();
+				POST_request(request);
 		}
 		catch (std::exception &e) {
 			error_flag = 1;
@@ -110,7 +110,7 @@ void HttpResponse::standart_error_body() {
 	_body = buf.str();
 }
 
-void HttpResponse::POST_request() { // функция вызывается в блоке try , можно выкидывать исключения (в классе CGI тоже)
+void HttpResponse::POST_request(HttpRequest &request) { // функция вызывается в блоке try , можно выкидывать исключения (в классе CGI тоже)
 	if (!_location.cgi_path.empty()) {
 		std::cout << BLUE"CGI WORK" RESET << std::endl;
 		std::string tmp = _location.cgi_path;
@@ -130,7 +130,32 @@ void HttpResponse::POST_request() { // функция вызывается в б
 		}
 	}
 	else
-		throw (std::runtime_error(RED"Unable to execute command because there is no CGI path" RESET));
+		PUT_request(request);
+}
+
+void HttpResponse::PUT_request(HttpRequest &request) {
+	std::string file_content;
+	std::string filename;
+
+	if (request.getHead().find("CONTENT-TYPE")->second.find("multipart") != std::string::npos)
+	{
+		unsigned start = request.getBody().find("filename=\"") + strlen("filename=\""); //filename="test.txt" обрезка названия файла
+		unsigned end = request.getBody().find('\"', request.getBody().find("filename=\"") + strlen("filename=\""));
+		filename = _merged_path + std::string(request.getBody(), start, end - start);
+
+		file_content = std::string (request.getBody(), request.getBody().find("\r\n\r\n") + 4);
+		file_content.erase(file_content.find("\r\n"));
+
+	} else {
+		std::cout << "NO MULTIPART" << std::endl;
+		filename = _merged_path + "download_file";
+		file_content = request.getBody();
+	}
+	int fd;
+	if ((fd = open(filename.c_str(), O_RDWR | O_CREAT | O_TRUNC, 0755)) < 0) { _code = 500; throw std::exception();}
+	write(fd, file_content.c_str(), file_content.size());
+	_code = 201;
+	close(fd);
 }
 
 void HttpResponse::GET_request() {

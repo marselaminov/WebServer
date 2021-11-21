@@ -20,7 +20,7 @@ void HttpRequest::clear() {
 
 void HttpRequest::parse(char *buf, size_t bytes_read) {
 	_strBuf.append(buf, bytes_read);
-	std::cout << CYAN"ALL BUFFER SIZE (BEFORE BODY BLOCK START) : " RESET << _strBuf.size() << std::endl;
+//	std::cout << CYAN"ALL BUFFER SIZE (BEFORE BODY BLOCK START) : " RESET << _strBuf.size() << std::endl;
 //	std::cout << YELLOW << _strBuf << RESET <<  std::endl;
 	switch (_state) {
 		case PARSE_QUERY_STR:
@@ -127,4 +127,8 @@ std::string HttpRequest::getContentType() {
 
 void HttpRequest::setContentType(std::string contentType) {
 	_head["CONTENT-TYPE"] = contentType;
+}
+
+const std::string &HttpRequest::getBody() const {
+	return _body;
 }

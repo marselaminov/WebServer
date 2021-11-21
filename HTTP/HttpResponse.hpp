@@ -22,14 +22,18 @@ public:
 	void generate(Server &server, HttpRequest &request);
 	std::string getResponse();
 	void clear();
+	void setCode(int code);
+	void setBody(const std::string &body);
+
 private:
 	std::string get_loc(Server &server, HttpRequest &request);
 	void 		check_method(const std::string& method);
 	void init(Server &server, HttpRequest &request);
 	void check_dir(HttpRequest &request);
 	void GET_request();
-	void POST_request();
+	void POST_request(HttpRequest &request);
 	void DELETE_request();
+	void PUT_request(HttpRequest &request);
 	void error_body(Server &server);
 	void standart_error_body();
 	void setStatusMessages();
@@ -37,20 +41,13 @@ private:
 	void create_header();
 	void create_to_send();
 
-	std::string _to_send;
-	std::string	_body;
-public:
-	void setBody(const std::string &body);
-
 private:
 	std::string _head;
 	t_location _location;
 	std::string _loc_name;
 	int _code;
-public:
-	void setCode(int code);
-
-private:
+	std::string _to_send;
+	std::string	_body;
 	struct stat _fileInfo;
 	std::string _merged_path;
 	std::map<int, std::string> _status_messages;

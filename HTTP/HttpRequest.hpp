@@ -40,6 +40,7 @@ public:
 	RequestStates	getState();
 	std::string getContentType();
 	void setContentType(std::string);
+	const std::string &getBody() const;
 
 private:
 	std::string							_strBuf;
