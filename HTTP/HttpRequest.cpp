@@ -21,7 +21,7 @@ void HttpRequest::clear() {
 void HttpRequest::parse(char *buf, size_t bytes_read) {
 	_strBuf.append(buf, bytes_read);
 	std::cout << CYAN"ALL BUFFER SIZE (BEFORE BODY BLOCK START) : " RESET << _strBuf.size() << std::endl;
-	std::cout << YELLOW << _strBuf << RESET <<  std::endl;
+//	std::cout << YELLOW << _strBuf << RESET <<  std::endl;
 	switch (_state) {
 		case PARSE_QUERY_STR:
 			parseQueryString();
@@ -84,8 +84,8 @@ void HttpRequest::parseBody() {
 
 void HttpRequest::handleContentBody() {
 	int cont_len = stoi(_head["CONTENT-LENGTH"]);
-	int t = _strBuf.size() - _strBuf.find(BODY_SEP) + 4;
-	if (_strBuf.size() - _strBuf.find(BODY_SEP) + 4 == cont_len){
+
+	if (_strBuf.length() - _strBuf.find(BODY_SEP) - 4 == cont_len){
 
 		_body = std::string (_strBuf, _strBuf.find(BODY_SEP) + 4, cont_len);
 		std::cout << "BODY:\n" << _body << std::endl;

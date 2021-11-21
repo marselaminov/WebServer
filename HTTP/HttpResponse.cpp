@@ -154,18 +154,15 @@ void HttpResponse::GET_request() {
 }
 
 void HttpResponse::DELETE_request() {
-	if (S_ISDIR(_fileInfo.st_mode))
-	{
+	if (S_ISDIR(_fileInfo.st_mode)) {
 		_code = 413;
 		throw std::exception();
 	}
-	if( remove( _merged_path.c_str()) != 0 )
-	{
+	if( remove( _merged_path.c_str()) != 0 ) {
 		_code = 501;
 		throw std::exception();
 	}
-	else
-	{
+	else {
 		_body = "<html>"
 				"<body>"
 				"<h1>File deleted.</h1>"
