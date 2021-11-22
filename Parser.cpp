@@ -5,7 +5,7 @@
 #include "Parser.hpp"
 
 const std::vector<Server *> &Parser::getServers() const {
-	return servers;
+	return _servers;
 }
 
 Parser::Parser(const Parser &src) {(void)src;}
@@ -42,7 +42,7 @@ std::string	get_value(std::string &line, std::string key) {
 	return (temp);
 }
 
-void	Parser::handleLocation(Server *serv, std::vector<std::string> &lines, size_t *i, size_t servIdx) {
+void	Parser::handleLocation(std::vector<std::string> &lines, size_t *i, size_t servIdx) {
 	std::string temp;
 	std::map<std::string, t_location> tmpLoc;
 
@@ -152,7 +152,7 @@ void	Parser::handleLocation(Server *serv, std::vector<std::string> &lines, size_
 			throw std::runtime_error("Where locations, man?");
 		}
 	}
-	serv[servIdx].setLocation(tmpLoc);
+	_servers[servIdx]->setLocation(tmpLoc);
 }
 
 void	Parser::handleServerBlock(std::string &file, size_t i) {
@@ -174,9 +174,10 @@ void	Parser::handleServerBlock(std::string &file, size_t i) {
 //		j++;
 //	}
 	//---------------------------------------------
+	int loc = 0; // flag for location
 	size_t j = 1;
 	Server *serv = new Server();
-	while (j < lines.size()) {
+	while (/*lines[j].find("location:") == std::string::npos && */j < lines.size()) {
 //		std::cout << lines[j] << std::endl;
 		if (lines[j][0] == '#' || lines[j].empty() || lines[j] == "\n") {
 			j++;
@@ -193,19 +194,27 @@ void	Parser::handleServerBlock(std::string &file, size_t i) {
 		else if (lines[j].find("error_page:") != std::string::npos)
 			serv->setErrorPage(get_value(lines[j], "error_page:"));
 		else if (lines[j].find("location:") != std::string::npos) {
-			handleLocation(serv, lines, &j, i);
+//			handleLocation(lines, &j, i);
+			loc = 1;
 			break;
 		}
 		else
 			throw std::runtime_error("Error in the config file");
 		j++;
 	}
-	std::cout << j << std::endl;
-	std::cout << i << std::endl;
-	std::cout << lines.size() << std::endl;
+	// -------------------------------------------------------------------------------------
+	_servers.push_back(serv);
+	if (loc)
+		handleLocation(lines, &j, i);
+	else
+		throw std::runtime_error("No location block in the config file");
+	// -------------------------------------------------------------------------------------
 	if (j != lines.size())
 		throw std::runtime_error("Some error in here, ours parser is crap");
-	this->servers.push_back(serv);
+
+	std::cout << "server count : " << i << std::endl;
+	std::cout << "lines size : " << j << std::endl;
+	std::cout << "lines size : " << lines.size() << std::endl;
 }
 
 void	Parser::work_with_file(const std::string &file) {
@@ -246,8 +255,28 @@ void	Parser::work_with_file(const std::string &file) {
 	input.close();
 }
 
+void Parser::errors_check() {
+	// port errors checking
+	for (size_t i = 0; i < _servers.size(); ++i){
+		for (size_t j = i + 1; j < _servers.size(); ++j){
+			if (_servers[i]->getPort() == _servers[j]->getPort())
+				throw std::runtime_error("Port error");
+		}
+	}
+	// else errors checking
+	for (size_t i = 0; i < _servers.size(); ++i) {
+		if (_servers[i]->getServerName().empty())
+			throw std::runtime_error("There is no server name");
+		if (_servers[i]->getPort() < 1024 || _servers[i]->getPort() > 65535)
+			throw std::runtime_error("Port should be between 1024 and 65534");
+		if (_servers[i]->getLocation().empty())
+			throw std::runtime_error("There is no locations");
+	}
+}
+
 Parser::Parser(const std::string &file) {
 	work_with_file(file);
+	errors_check();
 //	for (std::vector<Server *>::const_iterator i = servers.begin(); i != servers.end(); ++i)
 //		std::cout << *i << std::endl;
 }
