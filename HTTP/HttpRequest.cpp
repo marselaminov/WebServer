@@ -36,9 +36,17 @@ void HttpRequest::parse(char *buf, size_t bytes_read) {
 		case PARSE_BODY:
 			parseBody();
 	}
+//	if (_body.size() == 0)
+//		std::cout << YELLOW << _strBuf << RESET <<  std::endl;
 }
 
 void HttpRequest::parseQueryString() {
+//	while (!_strBuf.empty()) {
+//		std::cout << YELLOW << _strBuf << RESET << std::endl;
+//		if (_strBuf == "\r\n")
+//			break;
+//	}
+
 	_method = std::string(_strBuf, 0, _strBuf.find(' '));
 	_path = std::string(_strBuf, _method.length() + 1, _strBuf.find(' ', _method.length() + 1) - _method.length() - 1);
 
@@ -55,6 +63,9 @@ void HttpRequest::parseQueryString() {
 	std::cout << GREEN"PARAMETERS : " RESET << _parameters << std::endl; // для себя
 	if (_strBuf.find(CRLF) != std::string::npos)
 		_state = PARSE_HEAD;
+//	std::string tmp = _method + _path + _parameters;
+//	std::cout << GREEN"URL : " RESET << tmp << std::endl;
+//	std::cout << GREEN"URL : " RESET << _parameters << std::endl;// для себя
 }
 
 void HttpRequest::parseHead() {
@@ -70,13 +81,13 @@ void HttpRequest::parseHead() {
 		_state = PARSE_BODY;
 	}
 	// код ниже для себя (печатаю содержимое мапы head)
-//	std::cout << GREEN"HEAD:" RESET << std::endl;
-//	std::map<std::string, std::string>::const_iterator it;
-//	it = _head.begin();
-//	while (it != _head.end()) {
-//		std::cout << it->first << " : " << it->second << " " << std::endl;
-//		++it;
-//	}
+	std::cout << GREEN"HEAD:" RESET << std::endl;
+	std::map<std::string, std::string>::const_iterator it;
+	it = _head.begin();
+	while (it != _head.end()) {
+		std::cout << it->first << " : " << it->second << " " << std::endl;
+		++it;
+	}
 }
 
 void HttpRequest::parseBody() {
@@ -90,6 +101,8 @@ void HttpRequest::parseBody() {
 		handleContentBody();
 	else
 		_state = PARSE_FINISH;
+	std::cout << GREEN"BODY:\n" RESET << _body << std::endl;
+	std::cout << GREEN"BODYSIZE:\n" RESET << _body.size() << std::endl;
 }
 
 void HttpRequest::handleContentBody() {

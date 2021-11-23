@@ -38,19 +38,26 @@ void HttpResponse::generate(Server &server, HttpRequest &request) {
 			{
 				DELETE_request();
 			}
-			if (request.get_method() == "POST" || request.get_method() == "PUT")
+			if (request.get_method() == "POST" || request.get_method() == "PUT") {
+//				std::cout << request.get_method() << std::endl;
 				POST_request(request, server);
+			}
 		}
 		catch (std::exception &e) {
 			error_flag = 1;
+//			std::cout << "lala" << std::endl;
 			std::cerr << RED"ERROR: " << _code << RESET << std::endl;
 		}
 	}
 	if (error_flag)
 		error_body(server);
+	if (_location.client_max_body_size < _body.size() && _location.client_max_body_size > 0){
+		_code = 413;
+//		throw std::exception();
+	}
 	create_header();
 	_to_send = _head + _body;
-	std::cout << "RESPONSE: " << _head << "body_size: " << _body.size() << "head_size:  " << _head.size() << std::endl;
+	std::cout << GREEN"RESPONSE:\n" RESET << _head << "body_size: " << _body.size() << std::endl << "head_size:  " << _head.size() << std::endl;
 }
 
 void HttpResponse::create_header() {
@@ -67,7 +74,7 @@ void HttpResponse::create_header() {
 
 	header  << "HTTP/1.1 " << _code << " " << getStatusMessages(_code) << CRLF
 			<< "Date: " << date << CRLF
-			<< "Server: " << "KiRoTa/0.1" << CRLF
+			<< "Server: " << "Lions/777" << CRLF
 			<< "Content-Length: " << _body.size() << BODY_SEP;
 	_head = header.str();
 }
@@ -114,6 +121,8 @@ void HttpResponse::standart_error_body() {
 
 void HttpResponse::POST_request(HttpRequest &request, Server &server) { // функция вызывается в блоке try , можно выкидывать исключения (в классе CGI тоже)
 	std::cout << BLUE"POST" RESET << std::endl;
+	std::cout << _location.cgi_path << std::endl;
+//	std::cout << request.get_method() << std::endl;
 	if (!_location.cgi_path.empty() && request.get_method() == "POST") {
 		std::cout << BLUE"CGI WORK" RESET << std::endl;
 		std::string tmp = _location.cgi_path;
@@ -222,17 +231,22 @@ void HttpResponse::init(Server &server, HttpRequest &request) {
 		index.erase(0, 1);
 	_merged_path += index;
 
+//	if (_location.client_max_body_size < _body.size() && _location.client_max_body_size > 0){
+//		_code = 413;
+//		throw std::exception();
+//	}
+
 	if (stat(_merged_path.c_str(), &_fileInfo) == -1 && request.get_method() != "PUT" && request.get_method() != "POST") {  //информация о файле или диреткории по пути merged_Path
 		_code = 404;
 		throw std::exception();
 	}
 
-	if (request.get_method() == "PUT" || request.get_method() == "POST"){
-		_sgi_extension_ = std::string (_location.cgi_path);
-		_sgi_extension_.erase(_sgi_extension_.find(' '), std::string::npos);
-		if (_merged_path.find(_sgi_extension_) == std::string::npos && request.get_method() == "POST")
-			request.setMethod("PUT");
-	}
+//	if (request.get_method() == "PUT" || request.get_method() == "POST"){
+//		_sgi_extension_ = std::string (_location.cgi_path);
+//		_sgi_extension_.erase(_sgi_extension_.find(' '), std::string::npos);
+//		if (_merged_path.find(_sgi_extension_) == std::string::npos && request.get_method() == "POST")
+//			request.setMethod("PUT");
+//	}
 
 	if (S_ISDIR(_fileInfo.st_mode))						//если merged_Path папка
 		check_dir(request);

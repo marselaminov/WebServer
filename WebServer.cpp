@@ -58,6 +58,7 @@ void WebServer::handler(fd_set &readFdSet, fd_set &writeFdSet) {
 				FD_SET(_client[i]->getSocketFd(), &writeFdSet);
 		}
 		if (_client[i]->getState() == CREATE_RESPONSE){
+//			std::cout << _client[i]->getRequest()->get_method()<< std::endl;
 			_client[i]->getResponse()->generate(*_server[0], *_client[i]->getRequest()); /*todo добавить номер сервера*/
 			_client[i]->setState(SEND_RESPONSE);
 		}
