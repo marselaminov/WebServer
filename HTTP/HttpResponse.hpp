@@ -57,6 +57,7 @@ private:
 	struct stat _fileInfo;
 	std::string _merged_path;
 	std::map<int, std::string> _status_messages;
+	std::string _sgi_extension_;
 //	CGI _cgi;
 };
 

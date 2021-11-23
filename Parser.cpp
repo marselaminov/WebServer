@@ -212,9 +212,9 @@ void	Parser::handleServerBlock(std::string &file, size_t i) {
 	if (j != lines.size())
 		throw std::runtime_error("Some error in here, ours parser is crap");
 
-	std::cout << "server count : " << i << std::endl;
-	std::cout << "lines size : " << j << std::endl;
-	std::cout << "lines size : " << lines.size() << std::endl;
+//	std::cout << "server count : " << i << std::endl;
+//	std::cout << "lines size : " << j << std::endl;
+//	std::cout << "lines size : " << lines.size() << std::endl;
 }
 
 void	Parser::work_with_file(const std::string &file) {

@@ -22,12 +22,8 @@ void HttpRequest::clear() {
 void HttpRequest::parse(char *buf, size_t bytes_read) {
 	_strBuf.append(buf, bytes_read);
 //	std::cout << CYAN"ALL BUFFER SIZE (BEFORE BODY BLOCK START) : " RESET << _strBuf.size() << std::endl;
-//	std::cout << YELLOW << _strBuf << RESET << "\nsize: " << _strBuf.size() <<  std::endl;
-//	if (_strBuf.size()== 10000000)
-//	{
-		std::cout << "\nsize: " << _strBuf.size() <<  std::endl;
-//		throw 3;
-//	}
+//	std::cout << YELLOW << _strBuf << RESET <<  std::endl;
+
 	switch (_state) {
 		case PARSE_QUERY_STR:
 			parseQueryString();
@@ -63,10 +59,12 @@ void HttpRequest::parseQueryString() {
 
 void HttpRequest::parseHead() {
 
-	for (size_t i = _strBuf.find(CRLF, 0); _strBuf.find(BODY_SEP, i + 2) != std::string::npos ; i = _strBuf.find(CRLF, i + 2))
+	std::string tmp = std::string (_strBuf, 0, _strBuf.find(BODY_SEP) + 4);
+
+	for (size_t i = tmp.find(CRLF, 0); tmp.find(BODY_SEP, i + 2) != std::string::npos ; i = tmp.find(CRLF, i + 2))
 	{
-		std::string key = std::string(_strBuf, i + 2, _strBuf.find(':', i + 2) - i - 2);
-		std::string value = std::string(_strBuf, _strBuf.find(' ', i + 2) + 1, _strBuf.find(CRLF, i + 2) - i - 4 - key.length());
+		std::string key = std::string(tmp, i + 2, tmp.find(':', i + 2) - i - 2);
+		std::string value = std::string(tmp, tmp.find(' ', i + 2) + 1, tmp.find(CRLF, i + 2) - i - 4 - key.length());
 		std::transform(key.begin(), key.end(), key.begin(), toupper);
 		_head.insert(std::pair<std::string, std::string>(key, value));
 		_state = PARSE_BODY;
@@ -86,7 +84,6 @@ void HttpRequest::parseBody() {
 //	start += 4;
 //	std::cout << GREEN"BODY START INDEX : " RESET << start << std::endl;
 	if (_head.find("TRANSFER-ENCODING")->second == "chunked") {
-		std::cout << GREEN"CHUNKED" RESET << std::endl;
 		handleChunk();
 	}
 	else if (_head.find("CONTENT-LENGTH") != _head.end())
@@ -195,4 +192,8 @@ void HttpRequest::setContentType(std::string contentType) {
 
 const std::string &HttpRequest::getBody() const {
 	return _body;
+}
+
+void HttpRequest::setMethod(const std::string &method) {
+	_method = method;
 }

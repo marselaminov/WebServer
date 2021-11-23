@@ -35,7 +35,6 @@ CGI::CGI(Server *server, HttpRequest *request, std::string cgiPath) {
 	tmpEnv["REQUEST_URI"] = _request->get_path(); // url
 	tmpEnv["SCRIPT_NAME"] = _request->get_path(); // виртуальный путь к исполняемому модулю, используемый для получения URL
 	tmpEnv.insert(_request->getHead().begin(), _request->getHead().end()); // добавляем наш хед в переменнные окружения
-
 	//----------------------------------------------------------------------------------------------------------------------
 	// заполняем наше поле нашего класса (двумерный массив)
 	_env = (char **) calloc(tmpEnv.size() + 1, sizeof (char *));
@@ -71,7 +70,9 @@ void CGI::handleBody() { //text/html; charset=utf-8
 	}
 }
 
-CGI::~CGI() {}
+CGI::~CGI() {
+	free(_env);
+}
 
 void CGI::exec() {
 	FILE *file[2]; // переменная, в которую будет сохранен указатель на управляющую таблицу открываемого потока данных
@@ -112,19 +113,21 @@ void CGI::exec() {
 		dup2(fileFd[0], 0); // подменяем наши дескрипторы для запуска программы
 		dup2(fileFd[1], 1);
 		// запускаем нашу cgi программу в дочернем процессе, в случае успеха код уже ниже условия не пойдет
-		std::cerr << "PATH: " << _cgiPath  << std::endl;
+		for (int i = 0; _env[i]; ++i) {
+			std::cerr << _env[i] << std::endl;
+		}
 		if (execve(_cgiPath.c_str(), NULL, _env) == -1)
 			throw std::runtime_error("Error executing child process");
 		std::cerr << "Error status: 500" << std::endl;
 	}
 	else {
 		wait(NULL); // ожидаем завершения дочернего процесса и продолжаем работу уже в родит процессе
-		char buff[10000];
+		char buff[100001];
 		lseek(fileFd[1], 0, 0); // перемещаем указатель в начало файла
 		ssize_t bytes = 1;
 		while (bytes > 0) { // считываем пока не ошибка(-1) или не конец файла(0)
-			bzero(buff, 10000); // очищаем наш буфер , в который считываем из файлового потока
-			bytes = read(fileFd[1], buff, 10000); // считываем в буфер 10000 байт
+			bzero(buff,100001); // очищаем наш буфер , в который считываем из файлового потока
+			bytes = read(fileFd[1], buff, 100000); // считываем в буфер 10000 байт
 			_bodySize += bytes; // определяем размер тела
 			_body += buff; // записываем само тело запроса в стрингу
 		}

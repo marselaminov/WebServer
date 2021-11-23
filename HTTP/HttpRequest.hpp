@@ -45,6 +45,10 @@ public:
 private:
 	std::string							_strBuf;
 	std::string							_method;
+public:
+	void setMethod(const std::string &method);
+
+private:
 	std::string							_path;
 	std::string							_parameters; // query string
 	std::vector<ChunkedRequest *>		_chunk;

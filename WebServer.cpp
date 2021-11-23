@@ -19,7 +19,9 @@ WebServer::WebServer() {
 
 void WebServer::start() {
 	try {
-		_server[0]->createSocket();
+		for (int i = 0; i < _server.size(); ++i) {
+			_server[i]->createSocket();
+		}
 	}
 	catch (std::exception &e) {
 		std::cout << "ERROR: " << e.what() << std::endl;

@@ -24,8 +24,10 @@ void HttpResponse::generate(Server &server, HttpRequest &request) {
 		init(server,request);                    //поиск location, обработка ошибок, проверка файла
 	}
 	catch (std::exception &e) {
-		error_flag = 1;
-		std::cerr << "ERROR: " << _code << std::endl;
+		if (_code >= 400) {
+			error_flag = 1;
+			std::cerr << "ERROR: " << _code << std::endl;
+		}
 	}
 	if (!error_flag) {
 		try {
@@ -48,7 +50,7 @@ void HttpResponse::generate(Server &server, HttpRequest &request) {
 		error_body(server);
 	create_header();
 	_to_send = _head + _body;
-	std::cout << "RESPONSE: " << _head << " " << _body.size() << std::endl;
+	std::cout << "RESPONSE: " << _head << "body_size: " << _body.size() << "head_size:  " << _head.size() << std::endl;
 }
 
 void HttpResponse::create_header() {
@@ -159,8 +161,7 @@ void HttpResponse::PUT_request(HttpRequest &request) {
 		file_content.erase(file_content.find("\r\n"));
 
 	} else {
-		std::cout << "NO MULTIPART" << std::endl;
-		filename = _merged_path + "download_file";
+		filename = _merged_path + "_download_file";
 		file_content = request.getBody();
 	}
 	int fd;
@@ -221,9 +222,16 @@ void HttpResponse::init(Server &server, HttpRequest &request) {
 		index.erase(0, 1);
 	_merged_path += index;
 
-	if (stat(_merged_path.c_str(), &_fileInfo) == -1 && request.get_method().find("PUT") == std::string::npos) {  //информация о файле или диреткории по пути merged_Path
+	if (stat(_merged_path.c_str(), &_fileInfo) == -1 && request.get_method() != "PUT" && request.get_method() != "POST") {  //информация о файле или диреткории по пути merged_Path
 		_code = 404;
 		throw std::exception();
+	}
+
+	if (request.get_method() == "PUT" || request.get_method() == "POST"){
+		_sgi_extension_ = std::string (_location.cgi_path);
+		_sgi_extension_.erase(_sgi_extension_.find(' '), std::string::npos);
+		if (_merged_path.find(_sgi_extension_) == std::string::npos && request.get_method() == "POST")
+			request.setMethod("PUT");
 	}
 
 	if (S_ISDIR(_fileInfo.st_mode))						//если merged_Path папка
