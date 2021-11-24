@@ -15,9 +15,9 @@ void HttpRequest::clear() {
 	_parameters.clear();
 	_head.clear();
 	_body.clear();
-//	for (size_t i = 0; i < _chunk.size(); ++i) {
-//		delete _chunk[i];
-//	}
+	for (size_t i = 0; i < _chunk.size(); ++i) {
+		delete _chunk[i];
+	}
 	_chunk.clear(); //todo may be leaks
 	_state = PARSE_QUERY_STR;
 }

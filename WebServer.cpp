@@ -20,14 +20,14 @@ WebServer::WebServer(const char *file) {
 }
 
 WebServer::~WebServer() {
-//	for (size_t i = 0; i < _server.size(); ++i) {
-//		delete _server[i];
-//	}
-//	for (size_t i = 0; i < _client.size(); ++i) {
-//		delete _client[i];
-//	}
-//	_server.clear();
-//	_client.clear();
+	for (size_t i = 0; i < _server.size(); ++i) {
+		delete _server[i];
+	}
+	for (size_t i = 0; i < _client.size(); ++i) {
+		delete _client[i];
+	}
+	_server.clear();
+	_client.clear();
 }
 
 void WebServer::start() {

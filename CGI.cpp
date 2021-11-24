@@ -72,9 +72,9 @@ void CGI::handleBody() { //text/html; charset=utf-8
 }
 
 CGI::~CGI() {
-//	for (int i = 0; _env[i]; ++i) {
-//		free(_env[i]);
-//	}
+	for (int i = 0; _env[i]; ++i) {
+		free(_env[i]);
+	}
 	free(_env);
 }
 
