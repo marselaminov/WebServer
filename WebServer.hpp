@@ -5,9 +5,6 @@
 #ifndef WEBSERVER_WEBSERVER_HPP
 #define WEBSERVER_WEBSERVER_HPP
 
-#include <iostream>
-
-#include <vector>
 #include "Server.hpp"
 #include "Client.hpp"
 #include "HTTP/HttpRequest.hpp"
@@ -23,12 +20,13 @@
 #define PORT   8888
 
 class HttpResponse;
+class HttpRequest;
 class Client;
 
 class WebServer {
 public:
-	WebServer();
-	virtual ~WebServer() {};
+	WebServer(const char *file);
+	virtual ~WebServer();
 
 	void start();
 	void life_cycle();
@@ -39,7 +37,7 @@ private:
 
 
 	void initSD(fd_set &readFdSet, fd_set &writeFdSet);
-	void acceptor(fd_set &readFdSet, fd_set &writeFdSet);
+	void acceptor(fd_set &readFdSet);
 	void handler(fd_set &readFdSet, fd_set &writeFdSet);
 	void read_request(int client_num);
 	void send_response(int client_num);

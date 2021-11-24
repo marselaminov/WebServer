@@ -72,6 +72,9 @@ void CGI::handleBody() { //text/html; charset=utf-8
 }
 
 CGI::~CGI() {
+//	for (int i = 0; _env[i]; ++i) {
+//		free(_env[i]);
+//	}
 	free(_env);
 }
 
@@ -114,9 +117,6 @@ void CGI::exec() {
 		dup2(fileFd[0], 0); // подменяем наши дескрипторы для запуска программы
 		dup2(fileFd[1], 1);
 		// запускаем нашу cgi программу в дочернем процессе, в случае успеха код уже ниже условия не пойдет
-		for (int i = 0; _env[i]; ++i) {
-			std::cerr << _env[i] << std::endl;
-		}
 		if (execve(_cgiPath.c_str(), NULL, _env) == -1)
 			throw std::runtime_error("Error executing child process");
 		std::cerr << "Error status: 500" << std::endl;

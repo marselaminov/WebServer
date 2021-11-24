@@ -39,25 +39,24 @@ void HttpResponse::generate(Server &server, HttpRequest &request) {
 				DELETE_request();
 			}
 			if (request.get_method() == "POST" || request.get_method() == "PUT") {
-//				std::cout << request.get_method() << std::endl;
 				POST_request(request, server);
 			}
 		}
 		catch (std::exception &e) {
 			error_flag = 1;
-//			std::cout << "lala" << std::endl;
 			std::cerr << RED"ERROR: " << _code << RESET << std::endl;
 		}
 	}
-	if (error_flag)
-		error_body(server);
 	if (_location.client_max_body_size < _body.size() && _location.client_max_body_size > 0){
 		_code = 413;
-//		throw std::exception();
+		error_flag = 1;
+	}
+	if (error_flag) {
+		error_body(server);
 	}
 	create_header();
 	_to_send = _head + _body;
-	std::cout << GREEN"RESPONSE:\n" RESET << _head << "body_size: " << _body.size() << std::endl << "head_size:  " << _head.size() << std::endl;
+//	std::cout << GREEN"RESPONSE:\n" RESET << _head << "body_size: " << _body.size() << std::endl << "head_size:  " << _head.size() << std::endl;
 }
 
 void HttpResponse::create_header() {
@@ -120,8 +119,8 @@ void HttpResponse::standart_error_body() {
 }
 
 void HttpResponse::POST_request(HttpRequest &request, Server &server) { // функция вызывается в блоке try , можно выкидывать исключения (в классе CGI тоже)
-	std::cout << BLUE"POST" RESET << std::endl;
-	std::cout << _location.cgi_path << std::endl;
+//	std::cout << BLUE"POST" RESET << std::endl;
+//	std::cout << _location.cgi_path << std::endl;
 //	std::cout << request.get_method() << std::endl;
 	if (!_location.cgi_path.empty() && request.get_method() == "POST") {
 		std::cout << BLUE"CGI WORK" RESET << std::endl;
@@ -254,9 +253,10 @@ void HttpResponse::init(Server &server, HttpRequest &request) {
 
 void HttpResponse::check_dir(HttpRequest &request) {
 	(void ) request;
-	if (!_location.autoIndex && _location.index.empty()){
-		if (!_location.autoIndex)
+	if (!_location.autoIndex && _location.index.empty() && request.get_method() == "GET"){
+		if (!_location.autoIndex) {
 			_code = 403;
+		}
 		else
 			_code = 404;
 		throw std::exception();

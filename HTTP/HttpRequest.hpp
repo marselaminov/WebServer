@@ -19,6 +19,9 @@
 #define CRLF "\r\n"
 #define BODY_SEP "\r\n\r\n" // 2 строки
 
+class Client;
+class WebServer;
+
 enum RequestStates {
 	PARSE_QUERY_STR,
 	PARSE_HEAD,

@@ -5,13 +5,11 @@
 #ifndef WEBSERVER_CGI_HPP
 #define WEBSERVER_CGI_HPP
 
-#include "../HTTP/HttpRequest.hpp"
-#include "../HTTP/HttpResponse.hpp"
-#include "Server.hpp"
+#include "HTTP/HttpRequest.hpp"
+#include "HTTP/HttpResponse.hpp"
 #include <unistd.h>
 
 class HttpRequest;
-
 class HttpResponse;
 
 class CGI {

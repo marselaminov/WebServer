@@ -7,8 +7,8 @@
 
 #include <iostream>
 #include <arpa/inet.h>
-#include "../HTTP/HttpResponse.hpp"
-#include "../HTTP/HttpRequest.hpp"
+#include "HTTP/HttpResponse.hpp"
+#include "HTTP/HttpRequest.hpp"
 
 //#define _Client___Ready_To_Read 1
 //#define _Client___Ready_To_Parse 2
@@ -19,7 +19,6 @@
 #define BUFSIZE 555555
 
 class HttpResponse;
-class HttpRequest;
 
 enum States
 		{

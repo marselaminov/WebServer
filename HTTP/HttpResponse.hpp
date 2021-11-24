@@ -5,15 +5,16 @@
 #ifndef WEBSERVER_HTTPRESPONSE_HPP
 #define WEBSERVER_HTTPRESPONSE_HPP
 
-class WebServer;
-class HttpRequest;
 #include <iostream>
-
 #include "../WebServer.hpp"
 #include "../CGI.hpp"
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <unistd.h>
+
+class Client;
+class HttpRequest;
+class WebServer;
 
 class HttpResponse {
 public:

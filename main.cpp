@@ -2,16 +2,20 @@
 
 #include "WebServer.hpp"
 
-int main()
+int main(int argc, char **argv)
 {
-	try {
-//		signal(SIGPIPE, SIG_IGN);
-//		signal(SIGILL, SIG_IGN);
-		WebServer t;
-		t.start();
-//		TestServer t;
+	if (argc <= 2){
+		try {
+			signal(SIGPIPE, SIG_IGN);
+			signal(SIGILL, SIG_IGN);
+			WebServer t(argv[1]);
+			t.start();
+		}
+		catch (std::exception &e) {
+			std::cout << e.what() << std::endl;
+			std::cerr << "Server dont started!" << std::endl;
+			return -1;
+		}
 	}
-	catch (std::exception &e) {
-		std::cout << e.what() << std::endl;
-	}
+	return 0;
 }

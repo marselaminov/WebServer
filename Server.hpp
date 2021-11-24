@@ -1,24 +1,21 @@
 //
 // Created by lexa on 02.11.2021.
 //
-#ifndef WEBSERV_SERVER_HPP
-#define WEBSERV_SERVER_HPP
+#ifndef SERVER_HPP
+#define SERVER_HPP
 
 #include <iostream>
-#include <fstream>
 #include <string>
 #include <sstream>
 #include <vector>
 #include <fstream>
 #include <map>
 #include <strings.h>
-//#include <sys/socket.h>
-//#include <netinet/in.h>
 #include <arpa/inet.h>
 #include <unistd.h>
 #include <fcntl.h>
 
-#define BACKLOG 200
+#define BACKLOG 1024
 
 typedef struct	s_location {
 	std::vector<std::string>	methods;
