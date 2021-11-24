@@ -151,27 +151,47 @@ void HttpResponse::POST_request(HttpRequest &request, Server &server) { // фу�
 			delete cgi;
 		}
 	}
-	else
+	else {
+		std::cout << "BEFORE" << std::endl;
 		PUT_request(request);
+		std::cout << "AFTER" << std::endl;
+	}
 }
 
 void HttpResponse::PUT_request(HttpRequest &request) {
 	std::string file_content;
 	std::string filename;
 
-	if (request.getHead().find("CONTENT-TYPE")->second.find("multipart") != std::string::npos)
+	std::cout << "HERE1" << std::endl;
+//	std::cout << request.getHead().begin()->first << "=";
+//	std::cout << request.getHead().begin()->second << std::endl;
+//	std::cout << GREEN"HEAD:" RESET << std::endl;
+//	std::map<std::string, std::string>::const_iterator it;
+//	it = request.getHead().begin();
+//	while (it != request.getHead().end()) {
+//		std::cout << it->first << " : " << it->second << " " << std::endl;
+//		++it;
+//	}
+//std::map<std::string, std::string>::const_iterator it;
+	if (request.getHead().find("CONTENT-TYPE") != request.getHead().end() && request.getHead().find("CONTENT-TYPE")->second.find("multipart") != std::string::npos)
 	{
+		std::cout << "HERE1" << std::endl;
 		unsigned start = request.getBody().find("filename=\"") + strlen("filename=\""); //filename="test.txt" обрезка названия файла
+		std::cout << "HERE2" << std::endl;
 		unsigned end = request.getBody().find('\"', request.getBody().find("filename=\"") + strlen("filename=\""));
+
 		filename = _merged_path + std::string(request.getBody(), start, end - start);
 
 		file_content = std::string (request.getBody(), request.getBody().find("\r\n\r\n") + 4);
 		file_content.erase(file_content.find("\r\n"));
 
+
 	} else {
+
 		filename = _merged_path + "_download_file";
 		file_content = request.getBody();
 	}
+	std::cout << "HERE3" << std::endl;
 	int fd;
 	if ((fd = open(filename.c_str(), O_RDWR | O_CREAT | O_TRUNC, 0755)) < 0) { _code = 500; throw std::exception();}
 	write(fd, file_content.c_str(), file_content.size());
