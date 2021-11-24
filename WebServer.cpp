@@ -72,7 +72,7 @@ void WebServer::handler(fd_set &readFdSet, fd_set &writeFdSet) {
 		}
 		if (_client[i]->getState() == CREATE_RESPONSE){
 //			std::cout << _client[i]->getRequest()->get_method()<< std::endl;
-			std::cout << "CREATE RESPONSE" << i << std::endl;
+			std::cout << "CREATE RESPONSE " << _client[i]->getSocketFd() << std::endl;
 			_client[i]->getResponse()->generate(*_server[0], *_client[i]->getRequest()); /*todo добавить номер сервера*/
 			_client[i]->setState(SEND_RESPONSE);
 		}
@@ -102,9 +102,9 @@ void WebServer::send_response(int client_num) {
 	if (s_send < 0)
 		_client[client_num]->setState(CLOSE);
 
-	std::cout << YELLOW << "Sending a response to the user with ip " << RED << _client[client_num]->getInfoClient()
-	<< MAGENTA << ", len = " << s_send
-	<< " FD = " << _client[client_num]->getSocketFd() <<  RESET << std::endl;
+//	std::cout << YELLOW << "Sending a response to the user with ip " << RED << _client[client_num]->getInfoClient()
+//	<< MAGENTA << ", len = " << s_send
+//	<< " FD = " << _client[client_num]->getSocketFd() <<  RESET << std::endl;
 
 	_client[client_num]->setSendPos(_client[client_num]->getSendPos() + s_send);
 	if (static_cast<int>(_client[client_num]->getResponse()->getResponse().length()) == _client[client_num]->getSendPos()){
@@ -156,6 +156,7 @@ void WebServer::life_cycle() {
 	_max_socket_FD = _server.back()->get_sockFd();
 
 	std::cout << "Waiting on port: " << _server[0]->getPort() << std::endl;
+
 	while (true)
 	{
 		initSD(readFdSet, writeFdSet); // Инициализизируем структуру сокетов
@@ -168,4 +169,5 @@ void WebServer::life_cycle() {
 
 //		std::cout << "DONE!" << std::endl;
 	}
+
 }

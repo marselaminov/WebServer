@@ -39,12 +39,30 @@ void HttpRequest::parse(char *buf, size_t bytes_read) {
 //		case PARSE_BODY:
 //			parseBody();
 //	}
-	if (_state == PARSE_QUERY_STR)
-		parseQueryString();
-	if (_state == PARSE_HEAD)
-		parseHead();
-	if (_state == PARSE_BODY)
-		parseBody();
+	try {
+		if (_state == PARSE_QUERY_STR)
+			parseQueryString();
+	}
+	catch (std::exception &e) {
+		std::cerr << "PARSE_QUERY_STR" <<  std::endl;
+		throw std::exception();
+	}
+	try {
+		if (_state == PARSE_HEAD)
+			parseHead();
+	}
+	catch (std::exception &e) {
+		std::cerr << "PARSE_HEAD" <<  std::endl;
+		throw std::exception();
+	}
+	try {
+		if (_state == PARSE_BODY)
+			parseBody();
+	}
+	catch (std::exception &e) {
+		std::cerr << "PARSE_BODY" <<  std::endl;
+		throw std::exception();
+	}
 //	if (_body.size() == 0)
 //		std::cout << YELLOW << _strBuf << RESET <<  std::endl;
 }
@@ -55,23 +73,33 @@ void HttpRequest::parseQueryString() {
 //		if (_strBuf == "\r\n")
 //			break;
 //	}
+	if (_strBuf.find(CRLF) != std::string::npos) {
+		_method = std::string(_strBuf, 0, _strBuf.find(' '));
+		_path = std::string(_strBuf, _method.length() + 1, _strBuf.find(' ', _method.length() + 1) - _method.length() - 1);
 
-	_method = std::string(_strBuf, 0, _strBuf.find(' '));
-	_path = std::string(_strBuf, _method.length() + 1, _strBuf.find(' ', _method.length() + 1) - _method.length() - 1);
-
-	std::cout << GREEN"METHOD : " RESET << _method << std::endl;// для себя
+//	std::cout << GREEN"METHOD : " RESET << _method << std::endl;// для себя
 //	std::cout << GREEN"PATH : " RESET << _path << std::endl;// для себя
 
-	size_t i;
-	i = _path.find('?');
-	if (_path.find('?') != std::string::npos)
-	{
-		_parameters = std::string(_path, i + 1);
-		_path.erase(_path.find('?'), _path.size() - _path.find('?'));
+		size_t i;
+		i = _path.find('?');
+		if (_path.find('?') != std::string::npos) {
+			_parameters = std::string(_path, i + 1);
+			_path.erase(_path.find('?'),
+						_path.size() - _path.find('?'));
+		}
 	}
+
+
 //	std::cout << GREEN"PARAMETERS : " RESET << _parameters << std::endl; // для себя
-	if (_strBuf.find(CRLF) != std::string::npos)
-		_state = PARSE_HEAD;
+	try {
+		if (_strBuf.find(CRLF) != std::string::npos)
+			_state = PARSE_HEAD;
+	}
+	catch (std::exception &e) {
+		std::cerr << "3" <<  std::endl;
+		throw std::exception();
+	}
+
 //	std::string tmp = _method + _path + _parameters;
 //	std::cout << GREEN"URL : " RESET << tmp << std::endl;
 //	std::cout << GREEN"URL : " RESET << _parameters << std::endl;// для себя

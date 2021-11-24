@@ -6,8 +6,8 @@ int main(int argc, char **argv)
 {
 	if (argc <= 2){
 		try {
-			signal(SIGPIPE, SIG_IGN);
-			signal(SIGILL, SIG_IGN);
+//			signal(SIGPIPE, SIG_IGN);
+//			signal(SIGILL, SIG_IGN);
 			WebServer t(argv[1]);
 			t.start();
 		}
