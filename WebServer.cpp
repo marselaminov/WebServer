@@ -8,7 +8,7 @@ WebServer::WebServer(const char *file) {
 	Parser *parser;
 
 	if (!file)
-		file = "../test.conf";
+		file = "test.conf";
 	try {
 		parser = new Parser(file);
 	}

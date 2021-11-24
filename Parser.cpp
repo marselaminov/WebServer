@@ -221,7 +221,7 @@ void	Parser::work_with_file(const std::string &file) {
 	std::ifstream input;
 	input.open(file);
 	if (!input.is_open())
-		throw std::runtime_error("File corrupted");
+		throw std::runtime_error("File corrupted"); // todo сегу убрать
 	//------------------------------------------
 	std::string	str;
 	std::string	tmp;
@@ -274,7 +274,7 @@ void Parser::errors_check() {
 	}
 }
 
-Parser::Parser(const std::string &file) {
+Parser::Parser(const std::string &file) { // подправить парсер : сега, несколько серверов
 	work_with_file(file);
 	errors_check();
 //	for (std::vector<Server *>::const_iterator i = servers.begin(); i != servers.end(); ++i)
