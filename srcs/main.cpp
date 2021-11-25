@@ -21,9 +21,9 @@ int main(int argc, char **argv) {
 			t.start();
 		}
 		catch (std::exception &e) {
-			std::cout << e.what() << std::endl;
+			std::cerr << e.what() << std::endl;
 			std::cerr << RED"Server crashed!" RESET << std::endl;
-			return (-1);
+			return (1);
 		}
 	} else
 		std::cout << RED"Invalid arguments!" RESET << std::endl;

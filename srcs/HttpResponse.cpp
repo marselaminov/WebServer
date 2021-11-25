@@ -26,7 +26,6 @@ void HttpResponse::generate(Server &server, HttpRequest &request) {
 	catch (std::exception &e) {
 		if (_code >= 400) {
 			error_flag = 1;
-			std::cerr << "ERROR: " << _code << std::endl;
 		}
 	}
 	if (!error_flag) {
@@ -66,10 +65,12 @@ void HttpResponse::create_header() {
 	date = ctime(&rawtime);
 	date.erase(date.size() - 1);
 
+	std::cout << _body.size() << std::endl;
+
 	header << "HTTP/1.1 " << _code << " " << getStatusMessages(_code) << CRLF
 		   << "Date: " << date << CRLF
 		   << "Server: " << "Lions/777" << CRLF
-		   << "Content-Length: " << _body.size() << BODY_SEP;
+		   << "Content-Length: " << _body.size() <<  BODY_SEP;
 	_head = header.str();
 }
 
@@ -150,7 +151,7 @@ void HttpResponse::PUT_request(HttpRequest &request) {
 	if (request.getHead().find("CONTENT-TYPE") != request.getHead().end() &&
 		request.getHead().find("CONTENT-TYPE")->second.find("multipart") != std::string::npos) {
 		unsigned start = request.getBody().find("filename=\"") +
-						 strlen("filename=\""); //filename="funny pages.txt" обрезка названия файла
+						 strlen("filename=\""); //filename="funny_pages.txt" обрезка названия файла
 		unsigned end = request.getBody().find('\"', request.getBody().find("filename=\"") + strlen("filename=\""));
 
 		filename = _merged_path + std::string(request.getBody(), start, end - start);
@@ -176,9 +177,17 @@ void HttpResponse::PUT_request(HttpRequest &request) {
 
 void HttpResponse::GET_request() {
 	if (S_ISLNK(_fileInfo.st_mode) || S_ISREG(_fileInfo.st_mode)) {
-		std::ifstream file;
-		file.open(_merged_path);
-		std::getline(file, _body, '\0');
+
+		char buff;
+		int fd = 0;
+		std::vector<char> vector;
+		ssize_t res = 0;
+
+		if (!(fd = open(_merged_path.c_str(), O_RDONLY))) { std::cerr << "Can't open file" << std::endl; }
+		while ((res = read(fd, &buff, 1)) > 0) {
+			_body.push_back(buff);
+		}
+		close(fd);
 		if (_location.client_max_body_size < _body.size() && _location.client_max_body_size > 0) {
 			_code = 413;
 			throw std::exception();

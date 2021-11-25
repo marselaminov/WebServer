@@ -17,7 +17,8 @@ WebServer::WebServer(const char *file) {
 		parser = new Parser(config);
 	}
 	catch (std::exception &e) {
-		std::cout << "Error: " << e.what() << std::endl;
+		std::cerr << "Error: " << e.what() << std::endl;
+		throw std::runtime_error("Error: Config file");
 	}
 	_server = parser->getServers();
 	delete parser;
@@ -45,6 +46,14 @@ void WebServer::start() {
 		std::cout << "ERROR: " << e.what() << std::endl;
 	}
 	life_cycle();
+}
+
+Server *WebServer::define_server(unsigned int port) {
+	for (size_t i = 0; i < _server.size(); ++i) {
+		if(_server[i]->getPort() == port)
+			return _server[i];
+	}
+	return nullptr;
 }
 
 
@@ -76,8 +85,7 @@ void WebServer::handler(fd_set &readFdSet, fd_set &writeFdSet) {
 				FD_SET(_client[i]->getSocketFd(), &writeFdSet);
 		}
 		if (_client[i]->getState() == CREATE_RESPONSE) {
-			std::cout << "CREATE RESPONSE " << _client[i]->getSocketFd() << std::endl;
-			_client[i]->getResponse()->generate(*_server[0], *_client[i]->getRequest()); /*todo добавить номер сервера*/
+			_client[i]->getResponse()->generate(*define_server(_client[i]->getPort()), *_client[i]->getRequest());
 			_client[i]->setState(SEND_RESPONSE);
 		}
 		if (FD_ISSET(_client[i]->getSocketFd(), &writeFdSet) && _client[i]->getState() == SEND_RESPONSE) {
@@ -96,15 +104,14 @@ void WebServer::handler(fd_set &readFdSet, fd_set &writeFdSet) {
 }
 
 void WebServer::send_response(int client_num) {
-	_client[client_num]->getSendPos();
-
-	char *buf = new char[_client[client_num]->getResponse()->getResponse().length() + 1];
-	strcpy(buf, _client[client_num]->getResponse()->getResponse().c_str());
 
 	size_t len = _client[client_num]->getResponse()->getResponse().length() - _client[client_num]->getSendPos();
-	ssize_t s_send = send(_client[client_num]->getSocketFd(), &buf[_client[client_num]->getSendPos()], len, 0);
+
+	ssize_t s_send = send(_client[client_num]->getSocketFd(), _client[client_num]->getResponse()->getResponse().data() + _client[client_num]->getSendPos(), len, 0);
+
 	if (s_send < 0)
 		_client[client_num]->setState(CLOSE);
+	std::cout << GREEN"Sendin to " << RED << _client[client_num]->getInfoClient() << BLUE" size: " << s_send << RESET << std::endl;
 
 	_client[client_num]->setSendPos(_client[client_num]->getSendPos() + s_send);
 	if (static_cast<int>(_client[client_num]->getResponse()->getResponse().length()) ==
@@ -113,10 +120,9 @@ void WebServer::send_response(int client_num) {
 		_client[client_num]->setSendPos(0);
 	}
 	if (_client[client_num]->getRequest()->getHead().find("CONNECTION")->second == "close") {
-		std::cout << "close connection!!!" << std::endl;
+		std::cout << YELLOW"Client with ip "<< RED << _client[client_num]->getInfoClient() << YELLOW" close connection!!!" << RESET << std::endl;
 		_client[client_num]->setState(CLOSE);
 	}
-	delete[] buf;
 }
 
 void WebServer::read_request(int client_num) {
@@ -131,7 +137,6 @@ void WebServer::read_request(int client_num) {
 	}
 	_client[client_num]->getRequest()->parse(buffer, bytes_read);
 	if (_client[client_num]->getRequest()->getState() == PARSE_FINISH) {
-		std::cout << MAGENTA << "HttpRequest: Finish parse" << RESET << std::endl;
 		_client[client_num]->setState(CREATE_RESPONSE);
 	}
 }
@@ -156,7 +161,9 @@ void WebServer::life_cycle() {
 	fd_set readFdSet, writeFdSet;
 	_max_socket_FD = _server.back()->get_sockFd();
 
-	std::cout << BLUE"Waiting on port: " RESET << _server[0]->getPort() << std::endl;
+	for (size_t i = 0; i < _server.size(); ++i) {
+		std::cout << BLUE"Waiting on port: " RESET << _server[i]->getPort() << std::endl;
+	}
 
 	while (true) {
 		initSD(readFdSet, writeFdSet); // Инициализизируем структуру сокетов

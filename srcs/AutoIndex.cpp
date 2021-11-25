@@ -123,10 +123,10 @@ void get_body(std::stringstream &response, std::vector<t_content> &dir_content) 
 		else //file
 			response
 					<< "<img src=\"https://rubin-spb.ru/wp-content/uploads/2021/02/file.png\" width=\"20\" height=\"20\">";
-		response << "<gta href=\"";
+		response << "<a href=\"";
 		response << dir_content[i].name;
 		response << "\" style=\"color: white\">";
-		response << dir_content[i].name << "</gta>";
+		response << dir_content[i].name << "</a>";
 		for (unsigned long j = 0; j < 20 - dir_content[i].name.size(); ++j) {
 			response << " ";
 		}

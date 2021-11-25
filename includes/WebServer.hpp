@@ -42,14 +42,11 @@ private:
 
 
 	void initSD(fd_set &readFdSet, fd_set &writeFdSet);
-
 	void acceptor(fd_set &readFdSet);
-
 	void handler(fd_set &readFdSet, fd_set &writeFdSet);
-
 	void read_request(int client_num);
-
 	void send_response(int client_num);
+	Server *define_server(unsigned int port);
 };
 
 
