@@ -1,15 +1,15 @@
 NAME 		=	webserv
 
-SRC			= Server.cpp \
-        	HTTP/HttpRequest.cpp \
-        	HTTP/HttpResponse.cpp \
-        	HTTP/AutoIndex.cpp \
-        	WebServer.cpp \
-        	Parser.cpp \
-        	ChunkedRequest.cpp \
- 			CGI.cpp \
- 			Client.cpp \
-				main.cpp
+SRC			= 	srcs/Server.cpp \
+        		srcs/HttpRequest.cpp \
+        		srcs/HttpResponse.cpp \
+        		srcs/AutoIndex.cpp \
+        		srcs/WebServer.cpp \
+        		srcs/Parser.cpp \
+        		srcs/ChunkedRequest.cpp \
+ 				srcs/CGI.cpp \
+ 				srcs/Client.cpp \
+				srcs/main.cpp
 
 OBJ			=	$(SRC:.cpp=.o)
 
