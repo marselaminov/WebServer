@@ -11,22 +11,22 @@ SRC			= 	srcs/Server.cpp \
  				srcs/Client.cpp \
 				srcs/main.cpp
 
-OBJ			=	$(SRC:.cpp=.o)
+OBJS		=	$(SRC:.cpp=.o)
 
 CC			=	clang++
 
-FLAGS		=	-g -Wall -Wextra -Werror -std=c++98
+FLAGS		=	-Wall -Wextra -Werror -std=c++98
 
 RM			=	rm -rf
 
 all:			$(NAME)
 
-$(NAME):		$(OBJ)
-				$(CC) $(FLAGS) $(SRC) -o $(NAME)
+$(NAME):		$(OBJS)
+				$(CC) $(FLAGS) $(OBJS) -o $(NAME)
 				@make clean
 
 clean:
-				$(RM) $(OBJ)
+				$(RM) $(OBJS)
 
 fclean: 		clean
 				$(RM) $(NAME)
