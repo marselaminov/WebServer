@@ -35,6 +35,8 @@ class HttpRequest {
 public:
 	HttpRequest();
 
+	~HttpRequest();
+
 	void parse(char *buf, size_t bytes_read);
 
 	void clear();

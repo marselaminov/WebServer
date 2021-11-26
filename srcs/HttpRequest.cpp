@@ -8,6 +8,10 @@
 HttpRequest::HttpRequest() : _state(PARSE_QUERY_STR) {
 }
 
+HttpRequest::~HttpRequest() {
+	clear();
+}
+
 void HttpRequest::clear() {
 	_strBuf.clear();
 	_method.clear();
