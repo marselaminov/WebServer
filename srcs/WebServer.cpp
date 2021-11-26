@@ -111,7 +111,7 @@ void WebServer::send_response(int client_num) {
 
 	if (s_send < 0)
 		_client[client_num]->setState(CLOSE);
-	std::cout << GREEN"Sendin to " << RED << _client[client_num]->getInfoClient() << BLUE" size: " << s_send << RESET << std::endl;
+	std::cout << GREEN"Sending response to client with ip " << RED << _client[client_num]->getInfoClient() << BLUE", sent(bytes): " << s_send << RESET << std::endl;
 
 	_client[client_num]->setSendPos(_client[client_num]->getSendPos() + s_send);
 	if (static_cast<int>(_client[client_num]->getResponse()->getResponse().length()) ==
@@ -139,6 +139,7 @@ void WebServer::read_request(int client_num) {
 	if (_client[client_num]->getRequest()->getState() == PARSE_FINISH) {
 		_client[client_num]->setState(CREATE_RESPONSE);
 	}
+	std::cout << CYAN"Read request from client with ip " << RED << _client[client_num]->getInfoClient() << BLUE << ", sent(bytes): " << bytes_read << RESET << std::endl;
 }
 
 void WebServer::initSD(fd_set &readFdSet, fd_set &writeFdSet) {
@@ -162,7 +163,7 @@ void WebServer::life_cycle() {
 	_max_socket_FD = _server.back()->get_sockFd();
 
 	for (size_t i = 0; i < _server.size(); ++i) {
-		std::cout << BLUE"Waiting on port: " RESET << _server[i]->getPort() << std::endl;
+		std::cout << BLUE"Server waiting on port: " RESET << _server[i]->getPort() << std::endl;
 	}
 
 	while (true) {

@@ -65,8 +65,6 @@ void HttpResponse::create_header() {
 	date = ctime(&rawtime);
 	date.erase(date.size() - 1);
 
-	std::cout << _body.size() << std::endl;
-
 	header << "HTTP/1.1 " << _code << " " << getStatusMessages(_code) << CRLF
 		   << "Date: " << date << CRLF
 		   << "Server: " << "Lions/777" << CRLF
@@ -120,7 +118,6 @@ void HttpResponse::POST_request(HttpRequest &request, Server &server) {
 		if (tmp.find(".bla", 0, 4) != std::string::npos) {
 			size_t i = tmp.find(".bla", 0, 4);
 			i += 4;
-			std::cout << "i: " << i << " size: " << tmp.size() << std::endl;
 			while (i < tmp.size()) {
 				if (tmp[i] == ' ' || tmp[i] == '\t')
 					i++;
