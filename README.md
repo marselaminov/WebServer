@@ -9,3 +9,11 @@
 3) to test webserver use:<br>
    - run program with test config (./werbserv configs/tester.conf)<br>
    - bash tester/tester<br>
+
+
+<p align="center">
+  Алгоритм работы вебсервера
+  <br>
+  <img src="https://www.4stud.info/web-programming/img/cgi.gif" width="80%">
+  <br>
+</p>
