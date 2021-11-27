@@ -12,7 +12,7 @@
 
 
 <p align="center">
-  Алгоритм работы вебсервера
+  # Алгоритм работы вебсервера
   <br>
   <img src="https://www.4stud.info/web-programming/img/cgi.gif" width="80%">
   <br>
