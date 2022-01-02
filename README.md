@@ -4,7 +4,7 @@
 2) ./webserv<br>
    Second argument is optional. You can choose one of configuration files from "configs" folder.<br><br>
    For example:<br>
-   ./webserv configs/default.conf (Simple website - http://localhost:7000 and Autoindex implementation - http://localhost:9000)<br>
+   ./webserv configs/default.conf (Simple website - http://localhost:7000 and Autoindex implementation - http://localhost:9000(delete subject and checklist when starting autoindex))<br>
    ./webserv configs/tester.conf (launch tester - http://localhost:5000)<br>
 3) to test webserver use:<br>
    - run program with test config (./werbserv configs/tester.conf)<br>
